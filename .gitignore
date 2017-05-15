@@ -1,0 +1,4 @@
+.vagrant/
+.facts/
+.retry/
+ansible/inventory/vagrant/vagrant-*

@@ -1,0 +1,8 @@
+[Unit]
+Description=Tinc Service
+After=etcd.service etcd{{ etcd_version }}.service flanneld.service
+Before=fleet.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "echo \"TINC_HOSTNAME=`hostname | sed -e 's/-/_/g'`\" > /etc/tinc-env"

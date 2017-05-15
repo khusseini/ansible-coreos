@@ -1,0 +1,27 @@
+---
+- name: Writes cloud-config for a K8s cluster
+  hosts: coreos
+  roles:
+  - role: coreos
+    state: facts_gathered
+
+  - role: coreos-etcd
+    state: facts_gathered
+
+  - role: coreos-flannel
+    state: facts_gathered
+
+  - role: coreos-tinc
+    state: facts_gathered
+
+  - role: coreos-k8s
+    state: facts_gathered
+
+  - role: coreos
+    state: facts_written
+    delegate_to: localhost
+
+#  - role: coreos
+#    state: facts_written
+#    become: true
+#    coreos_config_compiled: '/var/lib/coreos-vagrant/vagrantfile-user-data'

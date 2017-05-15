@@ -1,0 +1,4 @@
+kube_cluster_name: vagrant
+
+kube_master_ip: 172.17.8.101
+kubectl_checksum: 4d56b8fbec4a274a61893d244bfce532cadf313632a31a065a0edf7130066ac6

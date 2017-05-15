@@ -1,0 +1,32 @@
+---
+- include_role:
+    name: coreos
+    tasks_from: gather_facts
+  vars:
+    config:
+      coreos:
+        flannel:
+          interface: "{{ inventory_hostname }}"
+        units:
+        - name: flanneld.service
+          command: start
+          enable: true
+          drop-ins:
+          - name: 50-network-config.conf
+            content: "{{ lookup('template', 'templates/50-network-config.conf.j2') }}"
+          - name: 40-symlink.conf
+            content: |
+              [Service]
+              ExecStartPre=/usr/bin/ln -sf /etc/flannel/options.env /run/flannel/options.env
+
+        - name: docker.service
+          command: start
+          drop-ins:
+          - name: 50-wait-for-flannel.conf
+            content: "{{ lookup('template', 'templates/50-wait-for-flannel.conf.j2') }}"
+
+      write_files:
+      - path: /etc/flannel/options.env
+        permissions: '0774'
+        owner: root
+        content: "{{ lookup('template', 'templates/options.env.j2') }}"

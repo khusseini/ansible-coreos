@@ -1,0 +1,6 @@
+---
+- name: Dependencies
+  apt:
+    name: gawk
+    update_cache: true
+    state: present

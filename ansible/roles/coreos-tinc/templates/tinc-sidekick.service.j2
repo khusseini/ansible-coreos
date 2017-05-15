@@ -1,0 +1,12 @@
+[Unit]
+Description=Tinc VPN Service
+BindsTo=tinc.service
+After=tinc.service
+Before=kubernetes-networking.target tinc-config-updater.service
+
+[Service]
+Restart=always
+EnvironmentFile=/etc/tinc-env
+EnvironmentFile=/etc/environment
+ExecStart=/bin/sh -c "while true; do etcdctl set /services/tinc/$TINC_HOSTNAME  \"\\\"` cat /srv/tinc/hosts/$TINC_HOSTNAME `\"\\\" --ttl 60;sleep 45;done"
+ExecStopPost=/bin/sh -c  "etcdctl rm /services/tinc/$TINC_HOSTNAME"

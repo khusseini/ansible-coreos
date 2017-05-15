@@ -1,0 +1,22 @@
+---
+coreos_hostname: core
+coreos_channel: stable
+coreos_username: core
+coreos_config_path: /tmp/cloud-config.yaml
+coreos_sysdev: /dev/sda
+coreos_vagrant_dir:
+baremetal_provider: vagrant
+
+coreos_config_src: "{{ coreos_config_source }}"
+coreos_config_units: "{{ coreos_config_src }}/units"
+coreos_config_writefiles: "{{ coreos_config_src }}/write_files"
+
+env: {}
+cconfig:
+  hostname: "{{ coreos_hostname }}"
+  ssh_authorized_keys: []
+  coreos:
+    update:
+      reboot-strategy: "off"
+    units: []
+  write_files: []

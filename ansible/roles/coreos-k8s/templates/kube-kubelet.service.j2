@@ -1,0 +1,35 @@
+[Unit]
+After=kubernetes-networking.target docker.service
+Requires=kubernetes-networking.target docker.service
+
+[Service]
+ExecStartPre=/usr/bin/mkdir -p /etc/kubernetes/manifests
+ExecStartPre=/usr/bin/mkdir -p /var/log/containers
+ExecStartPre=/usr/bin/docker pull ceph/base
+TimeoutStopSec=900s
+TimeoutStartSec=10m
+
+Environment=KUBELET_VERSION={{ hyperkube_aci_tag }}
+Environment=KUBELET_ACI={{ hyperkube_aci }}
+Environment="RKT_OPTS=--volume=modules,kind=host,source=/lib/modules/ --mount volume=modules,target=/lib/modules/ --volume resolv-conf,kind=host,source=/etc/resolv.conf --mount volume=resolv-conf,target=/etc/resolv.conf --volume var-log-containers,kind=host,source=/var/log/containers/ --mount volume=var-log-containers,target=/var/log/containers/"
+ExecStart=/usr/lib/coreos/kubelet-wrapper \
+  --api-servers=https://127.0.0.1:8888 \
+  --allow-privileged=true \
+  --pod-manifest-path=/etc/kubernetes/manifests \
+  --cluster-dns={{ k8s_dns_service_ip }} \
+  --cluster-domain={{ k8s_dns_domain }} \
+  --hostname-override={{ inventory_hostname }} \
+  --kubeconfig=/etc/kubernetes/worker-kubeconfig.yaml \
+  --tls-cert-file=/etc/kubernetes/ssl/worker.pem \
+  --tls-private-key-file=/etc/kubernetes/ssl/worker-key.pem \
+  --register-node=true \
+  --register-schedulable=true \
+  --node-status-update-frequency=2s
+ExecStartPost=-/opt/bin/uncordon-node
+ExecStop=/opt/bin/drain-node
+
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

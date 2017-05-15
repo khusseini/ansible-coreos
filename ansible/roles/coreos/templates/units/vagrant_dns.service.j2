@@ -1,0 +1,8 @@
+[Unit]
+Description=Setup Network Environment
+Requires=network-online.target
+After=network-online.target
+[Service]
+ExecStart=/usr/bin/sed -i '/10.0.2.3/d' /etc/resolv.conf
+RemainAfterExit=yes
+Type=oneshot

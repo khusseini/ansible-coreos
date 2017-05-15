@@ -1,0 +1,13 @@
+---
+- include_role:
+    name: coreos
+    tasks_from: gather_facts
+  vars:
+    cenv: {}
+    config:
+      write_files: []
+      coreos:
+        units:
+        - name: kube-kubelet.service
+          command: start
+          content: "{{ lookup('template', 'templates/kube-kubelet.service.j2') }}"

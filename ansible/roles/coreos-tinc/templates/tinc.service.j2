@@ -1,0 +1,40 @@
+[Unit]
+Description=Tinc VPN Service
+Requires=flannel-wait.service
+After=flanneld.service tinc-env.service flannel-wait.service
+Before=tinc-config-updater.service tinc-sidekick.service docker-bridge.service
+Wants=tinc-config-updater.service tinc-sidekick.service docker-bridge.service
+
+[Service]
+Restart=always
+
+EnvironmentFile=/etc/tinc-env
+EnvironmentFile=/etc/environment
+
+ExecStartPre=/usr/bin/rkt --insecure-options=image fetch docker://jenserat/tinc
+ExecStartPre=/usr/bin/rm -rf /srv/tinc
+ExecStartPre=/usr/bin/mkdir -p /srv/tinc
+ExecStartPre=/bin/sh -c "/usr/bin/rkt run  --volume tinc,kind=host,source=/srv/tinc,readOnly=false --mount volume=tinc,target=/etc/tinc docker://jenserat/tinc --exec=/usr/sbin/tinc -- init $TINC_HOSTNAME"
+ExecStartPre=/bin/sh -c "/usr/bin/rkt run  --volume tinc,kind=host,source=/srv/tinc,readOnly=false --mount volume=tinc,target=/etc/tinc docker://jenserat/tinc --exec=/usr/sbin/tinc -- add Address = $COREOS_PUBLIC_IPV4"
+
+TimeoutStartSec=5m
+
+EnvironmentFile=/run/flannel/subnet.env
+ExecStartPre=/bin/sh -c "/usr/bin/rkt run --volume tinc,kind=host,source=/srv/tinc,readOnly=false --mount volume=tinc,target=/etc/tinc docker://jenserat/tinc --exec=/usr/sbin/tinc -- add Subnet = `echo $FLANNEL_SUBNET | sed -e 's/1\\/24/0\\/24/'`"
+ExecStartPre=/bin/sh -c "/usr/bin/rkt run --volume tinc,kind=host,source=/srv/tinc,readOnly=false --mount volume=tinc,target=/etc/tinc docker://jenserat/tinc --exec=/usr/sbin/tinc -- add Mode = switch"
+ExecStartPre=/bin/sh -c "/usr/bin/rkt run --volume tinc,kind=host,source=/srv/tinc,readOnly=false --mount volume=tinc,target=/etc/tinc docker://jenserat/tinc --exec=/usr/sbin/tinc -- add DeviceType = tap"
+
+ExecStartPre=-/usr/bin/rkt stop --uuid-file=/srv/tinc/tinc.uuid
+
+ExecStart=/usr/bin/rkt run \
+    --uuid-file-save=/srv/tinc/tinc.uuid \
+    --volume tinc,kind=host,source=/srv/tinc,readOnly=false \
+    --mount volume=tinc,target=/etc/tinc \
+    --volume tun,kind=host,source=/dev/net/tun,readOnly=false \
+    --mount volume=tun,target=/dev/net/tun \
+    --insecure-options=image docker://jenserat/tinc \
+    --net=host \
+    --caps-retain=CAP_NET_ADMIN,CAP_NET_BIND_SERVICE,CAP_SETGID,CAP_SETUID \
+    --exec=/usr/sbin/tinc  -- start -D
+
+ExecStop=-/usr/bin/rkt stop --uuid-file=/srv/tinc/tinc.uuid

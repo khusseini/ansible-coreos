@@ -1,0 +1,39 @@
+[Unit]
+Description=Kubernetes API Server
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+Requires=setup-network-environment.service etcd{{ etcd_version }}.service
+After=setup-network-environment.service etcd{{ etcd_version }}.service kubernetes-networking.target
+Before=kube-kubelet.service
+
+[Service]
+Environment=KUBELET_VERSION={{ hyperkube_aci_tag }}
+Environment=KUBELET_ACI={{ hyperkube_aci }}
+Environment=EXEC=apiserver
+
+ExecStart=/opt/bin/hyperkube-wrapper \
+  --tls-cert-file=/etc/kubernetes/ssl/apiserver.pem \
+  --tls-private-key-file=/etc/kubernetes/ssl/apiserver-key.pem \
+  --client-ca-file=/etc/kubernetes/ssl/ca.pem \
+  --service-account-key-file=/etc/kubernetes/ssl/apiserver-key.pem \
+  --service-account-lookup=false \
+  --admission-control=NamespaceLifecycle,NamespaceAutoProvision,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota \
+  --runtime-config=api/v1 \
+  --allow-privileged=true \
+  --insecure-bind-address=127.0.0.1 \
+  --bind-address={{ inventory_hostname }} \
+  --insecure-port=8080 \
+  \
+  --etcd-cafile=/etc/ssl/etcd/ca.crt \
+  --etcd-certfile=/etc/ssl/etcd/key.crt \
+  --etcd-keyfile=/etc/ssl/etcd/key.key \
+  --etcd-servers="{% for host in groups['etcd-node'] %}https://{{host}}:2379{%if not loop.last %},{% endif %}{% endfor %}" \
+  \
+  --kubelet-https=true \
+  --secure-port=6443 \
+  --runtime-config=extensions/v1beta1/daemonsets=true \
+  --service-cluster-ip-range={{ k8s_service_ip_range }} \
+  --anonymous-auth=false \
+  --logtostderr=true
+
+Restart=always
+RestartSec=10

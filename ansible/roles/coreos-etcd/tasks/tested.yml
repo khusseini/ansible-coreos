@@ -1,0 +1,5 @@
+---
+- name: Check etcd cluster-health
+  shell: etcdctl cluster-health
+  register: etcdctl_ch
+  changed_when: "etcdctl_ch.rc != 0"

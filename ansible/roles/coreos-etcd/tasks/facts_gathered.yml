@@ -1,0 +1,32 @@
+---
+- include_role:
+    name: coreos
+    tasks_from: gather_facts
+  vars:
+    cenv:
+      etcdctl_api: '{{ etcd_version }}'
+      etcdctl_endpoint: 'https://{{ inventory_hostname }}:4001'
+      etcdctl_peers: "{{ lookup('template', 'templates/env/etcdctl_peers.j2') }}"
+    config:
+      coreos:
+        units:
+        - name: "etcd{{ etcd_version }}.service"
+          command: start
+          enable: true
+          content: "{{ lookup('template', 'templates/units/etcd'+etcd_version+'.service.j2') }}"
+
+        - name: etcd-waiter.service
+          command: start
+          content: "{{ lookup('template', 'templates/units/etcd-waiter.service.j2') }}"
+
+      write_files:
+      - path: /opt/bin/waiter.sh
+        owner: root
+        permissions: '0755'
+        content: |
+          #! /usr/bin/bash
+          until etcdctl cluster-health; do sleep 2; done
+
+- include: "{{ item }}"
+  with_fileglob:
+  - "facts_gathered/*.yml"

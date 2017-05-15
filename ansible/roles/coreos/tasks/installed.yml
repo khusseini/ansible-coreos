@@ -1,0 +1,18 @@
+---
+- include: 'install/{{ ansible_os_family }}.{{ ansible_pkg_mgr }}.yml'
+
+- name: Copy configuration
+  copy:
+    src: '{{ coreos_config_compiled }}'
+    dest: '{{ coreos_config_path }}'
+  tags:
+  - coreos_config_copy
+
+- name: Install CoreOS
+  shell: |
+     wget https://raw.githubusercontent.com/coreos/init/master/bin/coreos-install -P /tmp
+     chmod a+x /tmp/coreos-install
+     sed -i '/# inform the OS of partition table changes/a \
+     sleep 10 \
+     sync' /tmp/coreos-install
+     /tmp/coreos-install -d {{ coreos_sysdev }} -C {{ coreos_channel }} -c {{ coreos_config_path }}

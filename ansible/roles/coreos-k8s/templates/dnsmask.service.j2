@@ -1,0 +1,25 @@
+[Unit]
+Description=dnsmask service
+Requires=docker.service
+Before=kubernetes-networking.target
+
+[Install]
+WantedBy=kubernetes-networking.target
+
+[Service]
+ExecStartPre=/usr/bin/docker pull quay.io/coreos/dnsmasq
+ExecStartPre=-/usr/bin/docker rm -f dnsmask
+ExecStart=/usr/bin/docker run  \
+  --name dnsmask \
+  --net=host \
+  --cap-add=NET_ADMIN quay.io/coreos/dnsmasq -d -q  \
+  --listen-address=127.0.0.1 \
+  --server=/cluster.local/{{ k8s_dns_service_ip }} \
+  --rev-server={{ k8s_service_ip_range }},{{ k8s_dns_service_ip }} \
+  --rev-server=10.1.0.0/16,{{ k8s_dns_service_ip }} \
+  --server=8.8.8.8
+
+ExecStopPost=/usr/bin/docker rm -f dnsmask
+Restart=always
+RestartSec=10
+TimeoutStartSec=5m

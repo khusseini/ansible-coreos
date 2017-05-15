@@ -1,0 +1,15 @@
+#!/bin/sh
+
+. /etc/tinc-env
+
+for host in `etcdctl ls /services/tinc/ | sed -e 's/\/services\/tinc\///'`; do
+  if [ "$TINC_HOSTNAME" != "$host" ]; then
+    /usr/bin/rkt run \
+      --volume tinc,kind=host,source=/srv/tinc,readOnly=false \
+      --mount volume=tinc,target=/etc/tinc docker://jenserat/tinc \
+      --exec=/usr/sbin/tinc -- add ConnectTo = $host
+    etcdctl get /services/tinc/$host | sed -e 's/\"//g' > /srv/tinc/hosts/$host
+  fi
+done
+
+rkt enter $(cat /srv/tinc/tinc.uuid ) /usr/sbin/tinc reload

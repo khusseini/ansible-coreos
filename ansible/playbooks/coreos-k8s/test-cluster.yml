@@ -1,0 +1,6 @@
+---
+- name: Check if cluster is up and healthy
+  hosts: coreos
+  roles:
+  - role: coreos-etcd
+    state: tested

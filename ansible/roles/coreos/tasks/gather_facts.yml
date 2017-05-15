@@ -1,0 +1,26 @@
+---
+- name: Gather facts
+  set_fact:
+    dconfig:
+      coreos:
+        units: "{{ cconfig.coreos.units }}"
+      write_files: "{{ config.write_files | default([]) | union(cconfig.write_files) }}"
+  when: config.coreos is not defined
+
+- name: Gather facts
+  set_fact:
+    dconfig:
+      coreos:
+        units: "{{ config.coreos.units | default([]) | union(cconfig.coreos.units) }}"
+      write_files: "{{ config.write_files | default([]) | union(cconfig.write_files) }}"
+  when: config.coreos is defined
+
+- name: Gather facts
+  set_fact:
+    cconfig: "{{ cconfig | combine(config) }}"
+    env: "{{ env | combine(cenv) }}"
+  when: cenv is defined
+
+- name: Gather facts
+  set_fact:
+    cconfig: "{{ cconfig | combine(dconfig) }}"

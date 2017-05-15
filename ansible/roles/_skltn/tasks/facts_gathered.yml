@@ -1,0 +1,11 @@
+---
+- include_role:
+    name: coreos
+    tasks_from: gather_facts
+  vars:
+    cenv: {}
+    config:
+      coreos:
+        units: []
+
+      write_files: []

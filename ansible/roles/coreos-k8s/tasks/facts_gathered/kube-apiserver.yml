@@ -1,0 +1,31 @@
+---
+- include_role:
+    name: coreos
+    tasks_from: gather_facts
+  vars:
+    config:
+      write_files:
+      - path: /opt/bin/hyperkube-wrapper
+        permissions: '0775'
+        content: "{{ lookup('template', 'templates/hyperkube-wrapper.j2') }}"
+      coreos:
+        units:
+        - name: kube-apiserver.service
+          command: start
+          content: "{{ lookup('template', 'templates/kube-apiserver.service.j2') }}"
+  when: "'kubernetes-master' in group_names"
+
+- include_role:
+    name: coreos
+    tasks_from: gather_facts
+  vars:
+    config:
+      coreos:
+        units:
+        - name: kube-apiserver-haproxy.service
+          enable: true
+          command: start
+          content: "{{ lookup('template', 'templates/kube-apiserver-haproxy.service.j2') }}"
+      write_files:
+      - path: /etc/kube_apiserver_haproxy.cfg
+        content: "{{ lookup('template', 'templates/kube_apiserver_haproxy.cfg.j2') }}"

@@ -1,0 +1,33 @@
+#!/bin/sh
+
+. /etc/tinc-env
+
+host=${ETCD_WATCH_KEY/\/services\/tinc\//}
+
+if [ $TINC_HOSTNAME != $host ]; then
+  if [ "$ETCD_WATCH_ACTION" = "set" ]; then
+    echo "configuring new tinc host $host"
+    current_value="";
+    if [ -f /srv/tinc/hosts/$host ]; then
+      current_value="$( cat /srv/tinc/hosts/$host )"
+    fi
+    if [ "$ETCD_WATCH_VALUE" != "\"$current_value\"" ]; then
+      rkt enter $(cat /srv/tinc/tinc.uuid )  /usr/sbin/tinc  add ConnectTo = $host
+      echo  "$ETCD_WATCH_VALUE" | sed -e 's/\"//g' > /srv/tinc/hosts/$host
+      rkt enter $(cat /srv/tinc/tinc.uuid )  /usr/sbin/tinc reload \
+      || rkt enter $(cat /srv/tinc/tinc.uuid )  /usr/sbin/tinc stop
+      echo "done"
+    else
+     echo "old value = new value; nothing to do"
+    fi
+  fi
+
+  if [ "$ETCD_WATCH_ACTION" = "delete" ] || [ "$ETCD_WATCH_ACTION" = "expire" ]; then
+    echo "removing tinc host $host"
+    rkt enter $(cat /srv/tinc/tinc.uuid )  /usr/sbin/tinc del ConnectTo = $host
+    rm -f /srv/tinc/hosts/$host
+    rkt enter $(cat /srv/tinc/tinc.uuid )  /usr/sbin/tinc reload \
+    || rkt enter $(cat /srv/tinc/tinc.uuid )  /usr/sbin/tinc stop
+    echo "done"
+  fi
+fi

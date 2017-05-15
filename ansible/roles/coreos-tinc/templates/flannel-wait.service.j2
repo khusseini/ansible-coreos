@@ -1,0 +1,9 @@
+[Unit]
+Description=Wait For Flannel
+Requires=flanneld.service
+After=etcd.service etcd{{ etcd_version }}.service flanneld.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "echo \"TINC_HOSTNAME=`hostname | sed -e 's/-/_/g'`\" > /etc/tinc-env"
+ExecStartPre=/bin/sh -c "while [ ! -f /run/flannel/subnet.env ] ; do sleep 1; done"

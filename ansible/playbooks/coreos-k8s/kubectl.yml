@@ -1,0 +1,6 @@
+---
+- name: Install and configure kubectl
+  hosts: localhost
+  roles:
+  - role: kubectl
+  - role: kubectl-config

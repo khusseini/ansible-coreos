@@ -1,0 +1,1 @@
+{% for host in groups['etcd-node'] %}https://{{host}}:2379{%if not loop.last %},{% endif %}{% endfor %}

@@ -1,0 +1,11 @@
+---
+- include_role:
+    name: coreos
+    tasks_from: gather_facts
+  vars:
+    config:
+      coreos:
+        units:
+        - name: kube-scheduler.service
+          command: start
+          content: "{{ lookup('template', 'templates/kube-scheduler.service.j2') }}"

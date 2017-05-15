@@ -1,0 +1,24 @@
+[Unit]
+Description=Ha Proxy for kubernetes api server
+After=docker.service
+Before=kubernetes-networking.target
+
+[Service]
+TimeoutStartSec=5m
+ExecStartPre=-/usr/bin/docker kill haproxy
+ExecStartPre=-/usr/bin/docker rm -f haproxy
+ExecStartPre=/usr/bin/docker pull haproxy:alpine
+ExecStart=/usr/bin/docker run --rm \
+  --name haproxy \
+  -v /etc/kube_apiserver_haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg \
+  -p 127.0.0.1:8888:8080 \
+  haproxy:alpine
+
+ExecStop=-/usr/bin/docker stop haproxy
+ExecStop=-/usr/bin/docker rm haproxy
+
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=kubernetes-networking.target

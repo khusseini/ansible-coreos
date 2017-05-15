@@ -1,0 +1,31 @@
+[Unit]
+Description=Kubernetes Proxy
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+Requires=docker.service
+After=docker.service
+Before=kubernetes-networking.target
+
+[Install]
+WantedBy=kubernetes-networking.target
+
+[Service]
+TimeoutStartSec=10m
+Environment=KUBELET_VERSION={{ hyperkube_aci_tag }}
+Environment=KUBELET_ACI={{ hyperkube_aci }}
+
+ExecStartPre=/usr/bin/docker pull {{ hyperkube_aci }}:{{ hyperkube_aci_tag }}
+ExecStartPre=-/usr/bin/docker rm -f kube-proxy
+ExecStart=/usr/bin/docker run \
+    -v /etc/kubernetes/:/etc/kubernetes/ \
+    --name=kube-proxy \
+    --net=host --privileged=true \
+    {{ hyperkube_aci }}:{{ hyperkube_aci_tag }} \
+    /hyperkube proxy \
+    --master=https://localhost:8888 \
+    --kubeconfig=/etc/kubernetes/worker-kubeconfig.yaml \
+    --logtostderr=true \
+    --proxy-mode=iptables
+
+ExecStop=/usr/bin/docker rm -f kube-proxy
+Restart=always
+RestartSec=10

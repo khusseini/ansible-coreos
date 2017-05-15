@@ -1,0 +1,24 @@
+[Unit]
+Description=Kubernetes Controller Manager
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+Requires=kube-apiserver.service
+After=kube-apiserver.service
+Before=kube-kubelet.service
+
+[Service]
+Environment=KUBELET_VERSION={{ hyperkube_aci_tag }}
+Environment=KUBELET_ACI={{ hyperkube_aci }}
+Environment=EXEC=controller-manager
+Environment="RKT_OPTS=--volume=modules,kind=host,source=/lib/modules/ --mount volume=modules,target=/lib/modules/ --volume resolv-conf,kind=host,source=/etc/resolv.conf --mount volume=resolv-conf,target=/etc/resolv.conf --volume var-log-containers,kind=host,source=/var/log/containers/ --mount volume=var-log-containers,target=/var/log/containers/"
+ExecStart=/opt/bin/hyperkube-wrapper \
+--service-account-private-key-file=/etc/kubernetes/ssl/apiserver-key.pem \
+--root-ca-file=/etc/kubernetes/ssl/ca.pem \
+--master=127.0.0.1:8080 \
+--leader-elect=true \
+--leader-elect-lease-duration=15s \
+--leader-elect-renew-deadline=10s \
+--leader-elect-retry-period=2s \
+--logtostderr=true \
+-v=6
+Restart=always
+RestartSec=10

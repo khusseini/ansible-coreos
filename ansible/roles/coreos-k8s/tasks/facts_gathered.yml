@@ -1,0 +1,42 @@
+---
+- include_role:
+    name: coreos
+    tasks_from: gather_facts
+  vars:
+    cenv: {}
+    config:
+      coreos:
+        units:
+        - name: kubernetes-networking.target
+          command: start
+          content: |
+            [Unit]
+            Description=services required for proper container networking
+        - name: dnsmask.service
+          command: start
+          enable: true
+          content: "{{ lookup('template', 'templates/dnsmask.service.j2') }}"
+      write_files:
+      - path: /etc/kubernetes/worker-kubeconfig.yaml
+        content: |
+          apiVersion: v1
+          kind: Config
+          clusters:
+          - name: local
+            cluster:
+              certificate-authority: /etc/kubernetes/ssl/ca.pem
+          users:
+          - name: kubelet
+            user:
+              client-certificate: /etc/kubernetes/ssl/worker.pem
+              client-key: /etc/kubernetes/ssl/worker-key.pem
+          contexts:
+          - context:
+              cluster: local
+              user: kubelet
+            name: kubelet-context
+          current-context: kubelet-context
+
+- include: "{{ item }}"
+  with_fileglob:
+  - "facts_gathered/*.yml"

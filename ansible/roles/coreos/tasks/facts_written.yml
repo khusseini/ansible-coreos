@@ -1,0 +1,13 @@
+---
+- include: write_files.yml
+
+- name: Copy cloud-config
+  copy:
+    content: '{{ cconfig | combine(cloud_config) | to_yaml }}'
+    dest: '{{ coreos_config_compiled }}'
+
+- name: Ensure \#cloud-config line
+  lineinfile:
+    path: '{{ coreos_config_compiled }}'
+    line: '#cloud-config'
+    insertbefore: 'BOF'

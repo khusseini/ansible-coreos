@@ -1,0 +1,11 @@
+---
+- include_role:
+    name: coreos
+    tasks_from: gather_facts
+  vars:
+    config:
+      coreos:
+        units:
+        - name: kube-controller-manager.service
+          command: start
+          content: "{{ lookup('template', 'templates/kube-controller-manager.service.j2') }}"

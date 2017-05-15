@@ -1,0 +1,10 @@
+---
+- include: gather_facts.yml
+  config:
+    coreos:
+      units:
+      - name:  vagrant_dns.service
+        command: start
+        content: "{{ lookup('template', 'templates/units/vagrant_dns.service.j2') }}"
+  cenv: {}
+  when: "'vagrant' in group_names"

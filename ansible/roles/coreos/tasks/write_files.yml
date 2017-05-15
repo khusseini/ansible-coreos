@@ -1,0 +1,9 @@
+---
+- name: Write files
+  include: gather_facts.yml
+  config:
+    write_files:
+    - path: /etc/environment
+      permissions: "0774"
+      owner: root
+      content: "{{ lookup('template', playbook_dir + '/../../roles/coreos/templates/write_files/etc/environment.j2') }}"

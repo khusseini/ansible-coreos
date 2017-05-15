@@ -1,0 +1,12 @@
+---
+- include_role:
+    name: coreos
+    tasks_from: gather_facts
+  vars:
+    config:
+      coreos:
+        units:
+        - name: kube-proxy.service
+          enable: true
+          command: start
+          content: "{{ lookup('template', 'templates/kube-proxy.service.j2') }}"

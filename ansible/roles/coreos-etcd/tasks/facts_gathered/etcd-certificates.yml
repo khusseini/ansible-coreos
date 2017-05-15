@@ -1,0 +1,27 @@
+---
+- include: etcd-certificates/main.yml
+
+- include_role:
+    name: coreos
+    tasks_from: gather_facts
+  vars:
+    config:
+      write_files:
+      - path: /etc/ssl/etcd/ca.crt
+        permissions: '0644'
+        content: |
+          {{ etcd_ca_certificate }}
+
+      - path: /etc/ssl/etcd/key.crt
+        permissions: '0644'
+        content: |
+          {{ etcd_cert }}
+
+      - path: /etc/ssl/etcd/key.key
+        permissions: '0644'
+        content: |
+          {{ etcd_key }}
+    cenv:
+      etcdctl_cert_file: '/etc/ssl/etcd/key.crt'
+      etcdctl_ca_file: '/etc/ssl/etcd/ca.crt'
+      etcdctl_key_file: '/etc/ssl/etcd/key.key'

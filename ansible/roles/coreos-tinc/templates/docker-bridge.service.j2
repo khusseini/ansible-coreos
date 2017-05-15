@@ -1,0 +1,13 @@
+[Unit]
+Description=Configure Docker Bridge
+Requires=tinc.service
+After=tinc.service
+BindsTo=tinc.service
+
+[Service]
+RemainAfterExit=true
+Restart=always
+ExecStartPre=/bin/sh -c "while ! ifconfig -s | grep -q tap0 ; do  sleep 1; done"
+ExecStartPre=/bin/sh -c "while ! ifconfig -s | grep -q docker0 ; do  sleep 1; done"
+ExecStartPre=-/bin/sh -c "route add -net 10.1.0.0 netmask 255.255.0.0 dev docker0"
+ExecStart=/bin/sh -c "brctl addif docker0 tap0"

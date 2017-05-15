@@ -1,0 +1,20 @@
+{% if baremetal_provider == 'vagrant' %}
+[Match]
+Name=eth1
+[Network]
+DHCP=ipv4
+DNS=127.0.0.1
+DNS=8.8.8.8
+Domains=
+{% else %}
+[Match]
+Name=en*
+[Network]
+DHCP=ipv4
+DNS=127.0.0.1
+Domains=
+{% endif %}
+{% if hetzner_failover_ips is defined %} {% for ip in hetzner_failover_ips %}
+    Address={{ ip }}
+{% endfor %}
+{% endif %}

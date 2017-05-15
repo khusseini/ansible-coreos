@@ -1,0 +1,20 @@
+---
+- name: Gather facts
+  include: gather_facts.yml
+  config:
+    coreos:
+      units:
+      - name: 00-wired.network
+        runtime: true
+        content: "{{ lookup('template', 'templates/units/00-wired.network.j2') }}"
+
+      - name: setup-network-environment.service
+        command: start
+        content: "{{ lookup('template', 'templates/units/setup-network-environment.service.j2') }}"
+  cenv:
+    coreos_public_ipv4: "{{ inventory_hostname }}"
+    coreos_private_ipv4: "{{ inventory_hostname }}"
+
+- name: Gather children facts
+  include: '{{ item }}'
+  with_fileglob: 'facts_gathered/*.yml'
