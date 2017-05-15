@@ -1,0 +1,34 @@
+#!/bin/bash
+
+ERR=1 # or some non zero error number you want
+MAX_TRIES=4
+COUNT=0
+while [  $COUNT -lt $MAX_TRIES ]; do
+    /usr/bin/docker run \
+        --rm \
+        --net=host \
+        -v /etc/kubernetes/ssl/:/etc/kubernetes/ssl/ \
+        {{ hyperkube_aci }}:{{ hyperkube_aci_tag }} \
+            /hyperkube kubectl \
+                --client-key=/etc/kubernetes/ssl/worker-key.pem \
+                --client-certificate=/etc/kubernetes/ssl/worker.pem \
+                --server=https://127.0.0.1:8888 \
+                --certificate-authority=/etc/kubernetes/ssl/ca.pem \
+            drain {{ inventory_hostname }} --ignore-daemonsets=true --force --delete-local-data
+
+    if [ $? -eq 0 ];then
+        while  mount | grep -q rbd; do
+            echo "there are still rbds mountend. waiting another 10 seconds for them to disappear";
+            sleep 10;
+        done
+
+        echo "all rbds are unmounted"
+        echo "sleep another 10 seconds to remove locks"
+
+        sleep 10
+        exit 0
+    fi
+    let COUNT=COUNT+1
+done
+echo "Too many non-successful tries"
+exit $ERR

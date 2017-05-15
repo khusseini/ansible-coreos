@@ -5,7 +5,6 @@ Requires=kubernetes-networking.target docker.service
 [Service]
 ExecStartPre=/usr/bin/mkdir -p /etc/kubernetes/manifests
 ExecStartPre=/usr/bin/mkdir -p /var/log/containers
-ExecStartPre=/usr/bin/docker pull ceph/base
 TimeoutStopSec=900s
 TimeoutStartSec=10m
 

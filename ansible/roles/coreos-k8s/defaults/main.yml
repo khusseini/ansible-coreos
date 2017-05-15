@@ -3,7 +3,6 @@ coreos_k8s_service_ip: 10.100.0.1
 k8s_service_ip_range: 10.100.0.0/16
 k8s_dns_service_ip: 10.100.0.10
 k8s_dns_domain: cluster.local
-name
 
 hyperkube_aci: quay.io/coreos/hyperkube
 hyperkube_aci_tag: v1.6.1_coreos.0

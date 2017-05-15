@@ -5,10 +5,21 @@
   vars:
     cenv:
       etcdctl_api: '{{ etcd_version }}'
-      etcdctl_endpoint: 'https://{{ inventory_hostname }}:4001'
+      etcdctl_endpoint: https://{{ inventory_hostname }}:4001
       etcdctl_peers: "{{ lookup('template', 'templates/env/etcdctl_peers.j2') }}"
     config:
       coreos:
+        fleet:
+          public-ip: "{{ inventory_hostname }}"
+          etcd_cafile: /etc/ssl/etcd/ca.crt
+          etcd_certfile: /etc/ssl/etcd/key.crt
+          etcd_keyfile: /etc/ssl/etcd/key.key
+          etcd_servers: https://{{ inventory_hostname }}:2379
+        locksmith:
+          endpoint: https://{{ inventory_hostname }}:2379
+          etcd_cafile: /etc/ssl/etcd/ca.crt
+          etcd_certfile: /etc/ssl/etcd/key.crt
+          etcd_keyfile: /etc/ssl/etcd/key.key
         units:
         - name: "etcd{{ etcd_version }}.service"
           command: start

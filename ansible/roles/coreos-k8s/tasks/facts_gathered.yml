@@ -17,6 +17,28 @@
           enable: true
           content: "{{ lookup('template', 'templates/dnsmask.service.j2') }}"
       write_files:
+      - path: /opt/bin/check-cordon
+        permissions: '0775'
+        content: |
+          #!/bin/bash
+          /opt/bin/wait-for-apiserver
+          /usr/bin/docker run --rm --net=host -v /etc/kubernetes/ssl/:/etc/kubernetes/ssl/ {{ hyperkube_aci }}:{{ hyperkube_aci_tag }} \
+          /hyperkube kubectl --client-key=/etc/kubernetes/ssl/worker-key.pem --client-certificate=/etc/kubernetes/ssl/worker.pem \
+          --server=https://127.0.0.1:8888 --certificate-authority=/etc/kubernetes/ssl/ca.pem get nodes  | grep {{ inventory_hostname }} | grep  -q SchedulingDisabled
+      - path: /opt/bin/uncordon-node
+        permissions: '0775'
+        content: |
+          #!/bin/sh
+          while /opt/bin/check-cordon
+          do
+             /usr/bin/docker run --rm --net=host -v /etc/kubernetes/ssl/:/etc/kubernetes/ssl/ {{ hyperkube_aci }}:{{ hyperkube_aci_tag }} \
+             /hyperkube kubectl --client-key=/etc/kubernetes/ssl/worker-key.pem --client-certificate=/etc/kubernetes/ssl/worker.pem \
+             --server=https://127.0.0.1:8888 --certificate-authority=/etc/kubernetes/ssl/ca.pem uncordon {{ inventory_hostname }} || true
+          done
+      - path: /opt/bin/drain-node
+        permissions: '0775'
+        content: "{{ lookup('template', 'templates/drain-node.j2') }}"
+
       - path: /etc/kubernetes/worker-kubeconfig.yaml
         content: |
           apiVersion: v1
