@@ -75,20 +75,3 @@ help:               ## Shows this help
 %:                  ## Runs a playbook
 	@$(boot)
 	@$(playbook)/$*
-
-.PHONY: vagrant-rp
-vagrant-rp:         ## Reloads vagrant runs provisioner
-	@cd vagrant; vagrant provision; vagrant reload;
-
-.PHONY: vagrant-ssh-%
-vagrant-ssh-%:      ## SSH into vagrant host '%'
-	@cd vagrant; vagrant ssh $*
-
-.PHONY: vagrant-p
-vagrant-p:          ## Provisions vagrant
-	@cd vagrant; vagrant provision
-
-.PHONY: clean
-clean:              ## Cleans artifacts (e.g. ansible/inventory/my-cloud/my-cloud-*)
-	-@rm -rf ansible/$$(dirname $(inventory))/$(strip $(cn))-*
-	-@rm -f vagrant/*-user-data
