@@ -1,0 +1,17 @@
+---
+- name: Create target directory
+  file:
+    path: "{{ k8s_application_target }}"
+    state: directory
+
+- name: Copy templates
+  template:
+    src: "{{ item }}"
+    dest: "{{ k8s_application_target }}/{{ item | basename }}"
+  with_fileglob: "{{ k8s_application_root }}/*"
+
+- name: Create application
+  include: create-k8s-resource.yml
+  vars:
+    k8s_resource_file: '{{ item }}'
+  with_fileglob: "{{ k8s_application_target }}/*"

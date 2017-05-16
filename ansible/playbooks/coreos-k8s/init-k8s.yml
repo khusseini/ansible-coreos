@@ -3,19 +3,29 @@
   hosts: kubernetes-master
   connection: local
   roles:
-  - role: k8s-dns-addon
+#  - role: k8s-dns-addon
+#    delegate_to: localhost
+
+#  - role: calico
+#    delegate_to: localhost
+
+#  - role: k8s-resource
+#    k8s_resource_kind: Deployment
+#    k8s_resource_name: kubernetes-dashboard
+#    k8s_resource_namespace: kube-system
+#    k8s_resource_file: https://rawgit.com/kubernetes/dashboard/master/src/deploy/kubernetes-dashboard.yaml
+#    delegate_to: localhost
+#
+#  - role: k8s-application
+#    app_name: nginx-ingress
+#    delegate_to: localhost
+
+  - role: k8s-application
+    app_name: echoserver
     delegate_to: localhost
 
-  - role: calico
+  - role: k8s-application
+    app_name: youtrack
+    youtrack_name: sandbox
+    youtrack_host: youtrack.example.com
     delegate_to: localhost
-
-  - role: k8s-resource
-    k8s_resource_kind: Deployment
-    k8s_resource_name: kubernetes-dashboard
-    k8s_resource_namespace: kube-system
-    k8s_resource_file: https://rawgit.com/kubernetes/dashboard/master/src/deploy/kubernetes-dashboard.yaml
-    delegate_to: localhost
-
-  - role: k8s-nginx-ingress
-    delegate_to: localhost
-

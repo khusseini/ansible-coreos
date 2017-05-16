@@ -1,0 +1,4 @@
+---
+app_name: "echoserver"
+k8s_application_root: "{{ inventory_dir }}/../applications/{{ app_name }}"
+k8s_application_target: "{{ inventory_dir }}/{{ kube_cluster_name }}-{{ app_name }}"

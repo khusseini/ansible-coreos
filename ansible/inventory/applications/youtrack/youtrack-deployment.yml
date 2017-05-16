@@ -28,5 +28,5 @@ spec:
           initialDelaySeconds: 300
       volumes:
       - name: data
-        persistentVolumeClaim:
-          claimName: youtrack-{{ youtrack_name }}-pvc
+        hostPath:
+          path: /data/youtrack-{{ youtrack_name }}
