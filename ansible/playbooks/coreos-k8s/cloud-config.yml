@@ -21,8 +21,3 @@
   - role: coreos
     state: facts_written
     delegate_to: localhost
-
-#  - role: coreos
-#    state: facts_written
-#    become: true
-#    coreos_config_compiled: '/var/lib/coreos-vagrant/vagrantfile-user-data'

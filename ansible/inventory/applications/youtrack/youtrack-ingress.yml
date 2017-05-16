@@ -5,7 +5,12 @@ metadata:
   namespace: youtrack
   annotations:
     kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/tls-acme: "true"
 spec:
+  tls:
+  - hosts:
+    - "{{ youtrack_host }}"
+    secretName: youtrack-{{ youtrack_name }}-tls
   rules:
   - host: {{ youtrack_host }}
     http:

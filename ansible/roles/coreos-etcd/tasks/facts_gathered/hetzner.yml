@@ -1,0 +1,23 @@
+---
+- include_role:
+    name: coreos
+    tasks_from: gather_facts
+  vars:
+    config:
+      coreos:
+        units:
+        - name: setup-subnet-routes.service
+          command: start
+          content: |
+            [Unit]
+            Description=Setup Hetzner Subnet Routes
+            Requires=network-online.target
+            After=network-online.target
+            Before=etcd{{ etcd_version }}.service
+            [Service]
+            TimeoutStartSec=10m
+            ExecStartPre=/usr/bin/rkt fetch --insecure-options=image docker://quay.io/cornelius/hetner-netconf
+            ExecStart=/usr/bin/rkt run  --trust-keys-from-https --net=host  quay.io/cornelius/hetner-netconf --caps-retain=CAP_NET_ADMIN
+            RemainAfterExit=yes
+            Type=oneshot
+  when: baremetal_provider == 'hetzner'

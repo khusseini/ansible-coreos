@@ -10,6 +10,12 @@
     dest: "{{ k8s_application_target }}/{{ item | basename }}"
   with_fileglob: "{{ k8s_application_root }}/*"
 
+- name: Create 00
+  include: create-k8s-resource.yml
+  vars:
+    k8s_resource_file: '{{ item }}'
+  with_fileglob: "{{ k8s_application_target }}/00*"
+
 - name: Create application
   include: create-k8s-resource.yml
   vars:

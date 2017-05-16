@@ -1,0 +1,55 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: mattermost
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: postgres
+        namespace: mattermost
+    spec:
+      containers:
+      - name: postgresql
+        image: postgres:9
+        imagePullPolicy: Always
+        env:
+        - name: POSTGRES_PASSWORD
+          value: mmuser_password
+        - name: POSTGRES_DB
+          value: mattermost
+        - name: POSTGRES_USER
+          value: mmuser
+        ports:
+        - name: postgres
+          containerPort: 5432
+        volumeMounts:
+        - mountPath: /var/lib/postgresql
+          name: data
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -h
+            - localhost
+            - -U
+            - postgres
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -h
+            - localhost
+            - -U
+            - postgres
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+      volumes:
+      - name: data
+        hostPath:
+          path: /data/mm/postgres
+
