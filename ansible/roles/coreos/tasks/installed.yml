@@ -1,5 +1,9 @@
 ---
-- include: 'install/{{ ansible_os_family }}.{{ ansible_pkg_mgr }}.yml'
+- name: Dependencies
+  apt:
+    name: gawk
+    update_cache: true
+    state: present
 
 - name: Copy configuration
   copy:
@@ -16,3 +20,43 @@
      sleep 10 \
      sync' /tmp/coreos-install
      /tmp/coreos-install -d {{ coreos_sysdev }} -C {{ coreos_channel }} -c {{ coreos_config_path }}
+
+- name: clear osd disk
+  command: dd if=/dev/zero of={{ ceph_osd_device }} bs=512 count=1 conv=notrunc
+  when: ceph_osd_device is defined
+
+- name: create new partintion table on osd disk
+  shell: |
+      echo "g
+      w" | fdisk {{ ceph_osd_device }}
+  when: ceph_osd_device is defined
+  ignore_errors: true
+
+- name: reboot server
+  shell: sleep 5 && reboot &
+  args:
+      executable: /bin/bash
+  async: 10
+  poll: 0
+
+
+- name: waiting for server to go down
+  local_action:
+      module: wait_for
+      host: "{{ inventory_hostname }}"
+      port: 22
+      delay: 1
+      timeout: 20
+      state: stopped
+
+- name: waiting for server to come back
+  local_action:
+    module: wait_for
+      host={{ inventory_hostname }}
+      port=22
+      delay=1
+      timeout=200
+
+- name: remove server from local known_hosts file
+  local_action: command  /usr/bin/ssh-keygen -R {{ inventory_hostname }}
+  ignore_errors: true

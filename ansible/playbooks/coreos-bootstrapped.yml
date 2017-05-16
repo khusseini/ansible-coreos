@@ -3,4 +3,12 @@
   hosts: coreos
   gather_facts: false
   roles:
+  - role: boot-rescue
+    delegate_to: localhost
+
+  - role: coreos
+    state: installed
+    ansible_user: root
+    ansible_python_interpreter: /usr/bin/python
+
   - role: defunctzombie.coreos-bootstrap

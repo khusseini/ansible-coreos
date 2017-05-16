@@ -5,8 +5,7 @@ Conflicts=etcd.service
 Conflicts=etcd2.service
 {% if baremetal_provider != 'vagrant' %}
 Requires=systemd-networkd-wait-online.service
-After=systemd-networkd-wait-online.service setup-subnet-routes.service
-Requires=setup-subnet-routes.service
+After=systemd-networkd-wait-online.service
 {% else  %}
 Requires=systemd-networkd-wait-online.service
 After=systemd-networkd-wait-online.service

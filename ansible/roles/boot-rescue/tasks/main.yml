@@ -1,0 +1,4 @@
+---
+- include: hetzner.yml
+  when: baremetal_provider == 'hetzner'
+

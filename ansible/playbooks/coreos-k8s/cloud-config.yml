@@ -1,6 +1,7 @@
 ---
 - name: Writes cloud-config for a K8s cluster
   hosts: coreos
+  gather_facts: false
   roles:
   - role: coreos
     state: facts_gathered
