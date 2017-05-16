@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: youtrack-{{ deployment_name }}
+  namespace: youtrack
+  labels:
+    name: youtrack-{{ deployment_name }}
+spec:
+  selector:
+    name: youtrack-{{ deployment_name }}
+  ports:
+  - name: http
+    port: 80
+    targetPort: http

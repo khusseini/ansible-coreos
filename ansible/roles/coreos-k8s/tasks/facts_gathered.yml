@@ -58,7 +58,20 @@
               user: kubelet
             name: kubelet-context
           current-context: kubelet-context
-
+      - path: /opt/bin/k8s_healthy
+        permissions: '0775'
+        content: |
+          #!/bin/bash
+          ready=0
+          for line in $(/usr/bin/docker run --rm --net=host -v /etc/kubernetes/ssl/:/etc/kubernetes/ssl/ {{ hyperkube_aci }}:{{ hyperkube_aci_tag }} \
+          /hyperkube kubectl --client-key=/etc/kubernetes/ssl/worker-key.pem --client-certificate=/etc/kubernetes/ssl/worker.pem \
+          --server=https://127.0.0.1:8888 --certificate-authority=/etc/kubernetes/ssl/ca.pem get nodes  | sed -e 1,1d); do
+          echo $line | egrep -qE "NotReady|SchedulingDisabled"
+          if [ $? == 0 ]; then
+            ready=$(($ready + 1 ))
+          fi
+          done
+          exit $ready
 - include: "{{ item }}"
   with_fileglob:
   - "facts_gathered/*.yml"

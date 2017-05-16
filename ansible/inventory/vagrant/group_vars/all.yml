@@ -1,4 +1,10 @@
 kube_cluster_name: vagrant
 
 kube_master_ip: 172.17.8.101
+
+k8s_service_ip: 10.100.0.1
+k8s_service_ip_range: 10.100.0.0/16
+k8s_dns_service_ip: 10.100.0.10
+k8s_dns_domain: cluster.local
+
 kubectl_checksum: 4d56b8fbec4a274a61893d244bfce532cadf313632a31a065a0edf7130066ac6

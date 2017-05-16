@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: youtrack-{{ youtrack_name }}
+  namespace: youtrack
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: youtrack-{{ youtrack_name }}
+        app: youtrack
+    spec:
+      containers:
+      - name: youtrack-{{ youtrack_name }}
+        image: uniplug/youtrack
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 80
+        volumeMounts:
+        - mountPath: /opt/youtrack/data
+          name: data
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 300
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: youtrack-{{ youtrack_name }}-pvc

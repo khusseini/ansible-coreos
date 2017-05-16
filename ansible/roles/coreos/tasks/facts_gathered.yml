@@ -11,6 +11,19 @@
       - name: setup-network-environment.service
         command: start
         content: "{{ lookup('template', 'templates/units/setup-network-environment.service.j2') }}"
+    write_files:
+    - path: /opt/bin/update-window.sh
+      permissions: '0755'
+      owner: root
+      content: "{{ lookup('template', 'templates/write_files/update-window.sh.j2') }}"
+
+    - path: /opt/bin/update_needed.sh
+      permissions: '0755'
+      owner: root
+      content: |
+        #!/bin/bash
+        . /etc/environment
+        etcdctl set /needsreboot/$( cat /etc/machine-id) $( cat /etc/machine-id)
   cenv:
     coreos_public_ipv4: "{{ inventory_hostname }}"
     coreos_private_ipv4: "{{ inventory_hostname }}"

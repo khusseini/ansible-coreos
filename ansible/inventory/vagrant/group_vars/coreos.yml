@@ -5,4 +5,4 @@ coreos_config_compiled: '{{ inventory_dir }}/../../../vagrant/{{ coreos_hostname
 
 cloud_config:
   ssh_authorized_keys:
-  - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDP7BCxg0UhwLEcuDvAA6JgdNJVNcsIkSPDkhwXCpI5YfXM9Cj2vgUvJpDnS6WmQHZuoWvS4iIXXCoL2GeswEotlkkgRKfdcnFLwGqG4oJ1cISd1dncqcEJmu3Wl22QIMTTui/cSZaM0am74TGLvMnXaqzMvhQI7m9E3bJVAHeCD8sQJP/iYi0mo+ZpzLq+nKErXyq3cW0okfEYSdhgqXY2eYORet1G3OcNdD2lh0RIl6FXS2A+FqDx0+snVAsCqjyd80FcKU7as4BuIYJ2JwVKW3kOWGlN9jbu5U9REyzzfvsdn+UayECzsmFvmYFMexOZ/QuqN5UFqaEnM/aqLgZad248s4/SQQ+l92xiW7tHg9wpZ1fd/iW7WNoJCMJT6G9GBIcazdZKXrI4oAAjuCOEgPHMY0mUeOq/XABxheRBgqhUjzds2mrD14K0kjxsClEY7K+MdfUr37w15tZIEoIajPCDlHgws+UTRedgkUqGtQhlFeD1HJ+o/puLDEooWMgpPdyhnxSXRgW54V7ynhaLXmeTSiJZeRVPm5LDEmMTSPMHRXWSxvwwwjIsHUMMUkklIc9yNhE5ERU0OpQ+a9aVAOSwPDKVoKp3mhqOOOffTYPuDr+2lZYlOifggVP1qCCFYLXZ1UjISdzM3osrBaxZKA8I2bCIwEJhUC5XKwwPlQ== khairi.husseini@diepartments.de"
+  - "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"

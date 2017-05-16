@@ -26,12 +26,15 @@
       write_files:
       - path: /etc/kubernetes/ssl/ca-key.pem
         content: "{{ kube_ca_key }}"
+
       - path: /etc/conf.d/nfs
         permissions: '0644'
         content: |
           OPTS_RPC_MOUNTD=""
+
       - path: /etc/kubernetes/ssl/apiserver.pem
         content: "{{ kube_apiserver_pem }}"
+
       - path: /etc/kubernetes/ssl/apiserver-key.pem
         content: "{{ kube_apiserver_key }}"
   when: "'kubernetes-master' in group_names"

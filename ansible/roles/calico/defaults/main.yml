@@ -1,0 +1,4 @@
+coreos_hostname: core-01
+etcd_ca_certificate:  "{{ lookup('file', inventory_dir + '/' + kube_cluster_name +  '-etcd-ca-keys/.etcd-ca/' + coreos_hostname  + '.chain') }}"
+etcd_cert:    "{{ lookup('file', inventory_dir + '/' + kube_cluster_name +  '-etcd-ca-keys/.etcd-ca/' + coreos_hostname + '.host.crt') }}"
+etcd_key: "{{ lookup('file', inventory_dir + '/' + kube_cluster_name +  '-etcd-ca-keys/.etcd-ca/' + coreos_hostname + '.key.insecure') }}"

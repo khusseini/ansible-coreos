@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: youtrack-{{ youtrack_name }}
+  namespace: youtrack
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: {{ youtrack_host }}
+    http:
+      paths:
+      - backend:
+          serviceName: youtrack-{{ youtrack_name }}
+          servicePort: 80

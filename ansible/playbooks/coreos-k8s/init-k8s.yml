@@ -1,0 +1,8 @@
+---
+- name: Initialize Kubernetes
+  hosts: coreos
+  roles:
+  - role: k8s-dns-addon
+    delegate_to: localhost
+  - role: calico
+    delegate_to: localhost

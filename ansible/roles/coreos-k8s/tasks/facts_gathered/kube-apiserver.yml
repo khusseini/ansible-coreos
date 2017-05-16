@@ -8,6 +8,7 @@
       - path: /opt/bin/hyperkube-wrapper
         permissions: '0775'
         content: "{{ lookup('template', 'templates/hyperkube-wrapper.j2') }}"
+
       coreos:
         units:
         - name: kube-apiserver.service
@@ -29,3 +30,25 @@
       write_files:
       - path: /etc/kube_apiserver_haproxy.cfg
         content: "{{ lookup('template', 'templates/kube_apiserver_haproxy.cfg.j2') }}"
+
+      - path: /opt/bin/wait-for-apiserver
+        permissions: '0755'
+        content: |
+          #!/bin/bash
+          # [w]ait [u]ntil [p]ort [i]s [a]ctually [o]pen
+          [ -n "$1" ] && \
+            until curl -v -o /dev/null -sIf --cacert /etc/kubernetes/ssl/ca.pem --cert /etc/kubernetes/ssl/worker.pem --key /etc/kubernetes/ssl/worker-key.pem  https://localhost:8888; do \
+              sleep 1 && echo .;
+            done;
+          exit $?
+
+      - path: /opt/bin/wupiao
+        permissions: '0755'
+        content: |
+          #!/bin/bash
+          # [w]ait [u]ntil [p]ort [i]s [a]ctually [o]pen
+          [ -n "$1" ] && \
+            until curl -o /dev/null -sIf http://${1}; do \
+              sleep 1 && echo .;
+            done;
+          exit $?

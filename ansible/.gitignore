@@ -2,3 +2,4 @@
 .retry
 *-cloud-config
 *-kubernetes-ca
+.inventory
