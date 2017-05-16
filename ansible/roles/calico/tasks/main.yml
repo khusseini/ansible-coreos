@@ -33,10 +33,10 @@
 
   - include: ../k8s-resource/tasks/main.yml
     vars:
-        k8s_resource_kind: DaemonSet
-        k8s_resource_name: calico-node
-        k8s_resource_namespace: kube-system
-        k8s_resource_file: '{{ inventory_dir }}/{{ kube_cluster_name }}-calico/calico.yml'
+      k8s_resource_kind: DaemonSet
+      k8s_resource_name: calico-node
+      k8s_resource_namespace: kube-system
+      k8s_resource_file: '{{ inventory_dir }}/{{ kube_cluster_name }}-calico/calico.yml'
 
   - name: failsafe policy
     template:
