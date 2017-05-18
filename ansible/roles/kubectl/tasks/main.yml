@@ -2,7 +2,7 @@
 - name: kubectl checksum
   local_action:
      module: shell
-     args: "sha256sum ~/bin/kubectl  | awk '{ print $1}'"
+     args: "sha256sum ~/bin/kubectl  | awk '{ print $1 }'"
   run_once: yes
   register: current_kubectl_checksum
   changed_when: false

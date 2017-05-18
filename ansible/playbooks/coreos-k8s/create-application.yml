@@ -1,0 +1,8 @@
+---
+- name: Initialize Kubernetes
+  hosts: localhost
+  connection: local
+  roles:
+  - role: k8s-application
+    delegate_to: localhost
+    when: app_name is defined

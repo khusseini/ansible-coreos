@@ -23,20 +23,3 @@
   - role: k8s-application
     app_name: kube-lego
     delegate_to: localhost
-
-  - role: k8s-application
-    app_name: mattermost
-    delegate_to: localhost
-
-  tasks:
-  - include_role:
-      name: k8s-application
-    vars:
-      app_name: youtrack
-      youtrack_name: "{{ yt_item.name }}"
-      youtrack_host: "{{ yt_item.host }}"
-      k8s_application_target: "{{ inventory_dir }}/{{ kube_cluster_name }}-{{ app_name }}-{{ yt_item.name }}"
-    with_items: "{{ youtrack_instances }}"
-    loop_control:
-      loop_var: yt_item
-    delegate_to: localhost

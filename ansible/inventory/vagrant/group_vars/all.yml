@@ -3,4 +3,5 @@ k8s_service_ip: 10.100.0.1
 k8s_service_ip_range: 10.100.0.0/16
 k8s_dns_service_ip: 10.100.0.10
 k8s_dns_domain: cluster.local
-kubectl_checksum: 4d56b8fbec4a274a61893d244bfce532cadf313632a31a065a0edf7130066ac6
+kubernetes_version: 1.6.1
+kubectl_checksum: 4d36675f8239d31c0831cfcb956eb07604cf70a7739233597bce0e87e46c42b0.

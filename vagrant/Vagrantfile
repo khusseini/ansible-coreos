@@ -50,7 +50,7 @@ Vagrant.configure("2") do |config|
   config.ssh.insert_key = false
   # forward ssh agent to easily ssh into the different machines
   config.ssh.forward_agent = true
-  config.ssh.private_key_path = "~/.ssh/id_rsa"
+#  config.ssh.private_key_path = "~/.ssh/id_rsa"
 
 
   config.vm.box = "coreos-%s" % $update_channel

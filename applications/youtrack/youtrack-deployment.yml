@@ -1,18 +1,18 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: youtrack-{{ youtrack_name }}
+  name: youtrack-{{ app_id }}
   namespace: youtrack
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        name: youtrack-{{ youtrack_name }}
+        name: youtrack-{{ app_id }}
         app: youtrack
     spec:
       containers:
-      - name: youtrack-{{ youtrack_name }}
+      - name: youtrack-{{ app_id }}
         image: uniplug/youtrack
         imagePullPolicy: Always
         ports:
@@ -29,4 +29,4 @@ spec:
       volumes:
       - name: data
         hostPath:
-          path: /data/youtrack-{{ youtrack_name }}
+          path: /data/youtrack/{{ app_id }}

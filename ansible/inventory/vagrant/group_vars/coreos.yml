@@ -1,4 +1,5 @@
 etcd_version: '3'
+
 coreos_channel: stable
 coreos_config_source: '{{ inventory_dir }}/{{ kube_cluster_name }}-cloud-config'
 coreos_config_compiled: '{{ inventory_dir }}/../../../vagrant/{{ coreos_hostname }}-user-data'
