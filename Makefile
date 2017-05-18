@@ -6,13 +6,10 @@ SHELL := bash
 .SUFFIXES:
 
 ### Options
-cn := vagrant                                ##Opt: Sets the cluster name (e.g. make cn=my-cloud coreos-kubernetes/configure.yml
+cn := vagrant                                       ##Opt: Sets the cluster name (e.g. make cn=my-cloud coreos-kubernetes/configure.yml
 i := $(PWD)/ansible/inventory/vagrant/inventory.ini ##Opt: Set the inventory file location (e.g. make i=inventory/my-cloud/inventory.ini)
-verbose := off                               ##Opt: Set ansible verbosity (e.g. make verbose=on coreos-kubernetes/configure.yml)
-a := $(PWD)/applications                  ##Opt: Set path to K8s applications (e.g. inventory/applications)
-h := localhost
-ai :=
-an :=
+verbose := off                                      ##Opt: Set ansible verbosity (e.g. make verbose=on coreos-kubernetes/configure.yml)
+e :=                                                ##Opt: Set ansible extra_vars
 
 ### Variables ####
 inventory = $(strip $(i))
@@ -31,7 +28,7 @@ boot += $(info)
 define playbook
 ANSIBLE_CONFIG=$(PWD)/ansible/ansible.cfg \
     ansible-playbook $(verbose_ansible_$(verbose)) \
-    -e "kube_cluster_name=$(strip $(cn)) app_dir=$(strip $(a)) app_host=$(strip $(h)) app_id=$(strip $(ai)) app_name=$(strip $(an))" \
+    -e "kube_cluster_name=$(strip $(cn))$(e)" \
     -i $(inventory) $(playbooks_dir)
 endef
 

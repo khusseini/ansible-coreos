@@ -1,14 +1,16 @@
 ---
-- name: Bootstraps ansible on CoreOS
+- name: Bootstraps CoreOS
   hosts: coreos
   gather_facts: false
   roles:
   - role: boot-rescue
     delegate_to: localhost
+    when: baremetal_provider != 'vagrant'
 
   - role: coreos
     state: installed
     ansible_user: root
     ansible_python_interpreter: /usr/bin/python
+    when: baremetal_provider != 'vagrant'
 
   - role: defunctzombie.coreos-bootstrap
