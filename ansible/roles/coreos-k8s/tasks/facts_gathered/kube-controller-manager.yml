@@ -9,3 +9,4 @@
         - name: kube-controller-manager.service
           command: start
           content: "{{ lookup('template', 'templates/kube-controller-manager.service.j2') }}"
+  when: "'kubernetes-master' in group_names"

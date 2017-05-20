@@ -1,0 +1,2 @@
+---
+- include: "update/{{ baremetal_provider }}.yml"

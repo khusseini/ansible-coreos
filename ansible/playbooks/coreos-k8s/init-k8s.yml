@@ -2,6 +2,7 @@
 - name: Initialize Kubernetes
   hosts: kubernetes-master
   connection: local
+  gather_facts: false
   roles:
   - role: k8s-dns-addon
     delegate_to: localhost

@@ -19,5 +19,12 @@
     state: facts_gathered
 
   - role: coreos
-    state: facts_written
+    state: cloud-config_written
     delegate_to: localhost
+#    when: "'vagrant' in group_names'"
+
+#- role: coreos
+#  state: ignition-config_written
+#  delegate_to: local_host
+#  when: "'vagrant' not in group_names"
+#

@@ -1,4 +1,4 @@
-kube_master_ip: 172.17.8.101
+k8s_kube_master_ip: 172.17.8.101
 k8s_service_ip: 10.100.0.1
 k8s_service_ip_range: 10.100.0.0/16
 k8s_dns_service_ip: 10.100.0.10

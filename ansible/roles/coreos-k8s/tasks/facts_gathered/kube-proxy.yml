@@ -10,3 +10,5 @@
           enable: true
           command: start
           content: "{{ lookup('template', 'templates/kube-proxy.service.j2') }}"
+      write_files:
+      - path: /etc/kube_apiserver_haproxy.cfg

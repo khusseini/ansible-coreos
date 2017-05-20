@@ -1,0 +1,8 @@
+---
+- name: Cloud config is updated
+  copy:
+    src: "{{ coreos_config_compiled }}"
+    dest: /var/lib/coreos-vagrant/vagrantfile-user-data
+
+- name: Restart the host
+  shell: /sbin/shutdown -r +1 "cloud-config changed"

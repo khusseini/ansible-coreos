@@ -9,3 +9,4 @@
         - name: kube-scheduler.service
           command: start
           content: "{{ lookup('template', 'templates/kube-scheduler.service.j2') }}"
+  when: "'kubernetes-master' in group_names"
