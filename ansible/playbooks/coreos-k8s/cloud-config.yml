@@ -19,9 +19,9 @@
     state: facts_gathered
 
   - role: coreos
-    state: cloud-config_written
+    state: cloud-config
     delegate_to: localhost
-#    when: "'vagrant' in group_names'"
+    when: "'vagrant' in group_names"
 
 #- role: coreos
 #  state: ignition-config_written

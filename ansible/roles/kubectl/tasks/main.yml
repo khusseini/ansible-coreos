@@ -15,4 +15,6 @@
      sha256sum: "{{ kubectl_checksum }}"
      mode: 0770
   run_once: yes
-  when: kubectl_checksum != current_kubectl_checksum.stdout
+  when:
+  - current_kubectl_checksum.changed
+  - kubectl_checksum != current_kubectl_checksum.stdout

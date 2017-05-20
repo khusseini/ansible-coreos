@@ -1,11 +1,11 @@
 ---
 - name: Updates CoreOS cloud-config
   hosts: coreos
-  become: true
   serial: 1
   roles:
   - role: coreos
+    become: true
     state: updated
   tasks:
   - name: Wait for node to come back
-    local_action: wait_for host={{ inventory_hostname }} timeout=120
+    local_action: wait_for host={{ inventory_hostname }}
