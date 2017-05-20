@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -e
+
+args=${@}
+
+docker run \
+    --rm \
+    --net host \
+    -v "${HOME}/.ssh":/root/.ssh \
+    -v "${HOME}/bin":/root/bin \
+    -v "${HOME}/.kubectl":/root/.kubectl \
+    -v "${PWD}/ansible":/opt/ansible-coreos/ansible \
+    -ti \
+  ansible-coreos ${args}
