@@ -22,7 +22,11 @@ ExecStart=/usr/lib/coreos/kubelet-wrapper \
   --tls-cert-file=/etc/kubernetes/ssl/worker.pem \
   --tls-private-key-file=/etc/kubernetes/ssl/worker-key.pem \
   --register-node=true \
+{%- if 'kube-master' in group_names %}
   --register-schedulable=false \
+{%- else %}
+  --register-schedulable=true \
+{%- endif %}
   --node-status-update-frequency=2s
 ExecStartPost=-/opt/bin/uncordon-node
 ExecStop=/opt/bin/drain-node

@@ -5,20 +5,19 @@ SHELL := bash
 .DELETE_ON_ERROR:
 .SUFFIXES:
 
-### Options
+### Options ###
+root = $(CURDIR)
 cn := vagrant                                       ##Opt: Sets the cluster name (e.g. make cn=my-cloud coreos-kubernetes/configure.yml
-i := $(PWD)/ansible/inventory/vagrant/inventory.ini ##Opt: Set the inventory file location (e.g. make i=inventory/my-cloud/inventory.ini)
+i = $(root)/ansible/inventory/vagrant/inventory.ini ##Opt: Set the inventory file location (e.g. make i=inventory/my-cloud/inventory.ini)
 verbose := off                                      ##Opt: Set ansible verbosity (e.g. make verbose=on coreos-kubernetes/configure.yml)
-e :=                                                ##Opt: Set ansible extra_vars
+e := app_dir=$(root)/applications                   ##Opt: Set ansible extra_vars
 
 ### Variables ####
 inventory = $(strip $(i))
 verbose_ansible_on = -vvvv
-verbose_ansible_off = ""
-applications = $(strip $(a))
-root = $(shell pwd)
+verbose_ansible_off =
 gutter := 55
-playbooks_dir = $(PWD)/ansible/playbooks
+playbooks_dir = $(root)/ansible/playbooks
 
 ### Commands ###
 boot = echo "";
@@ -26,9 +25,9 @@ info += echo "Using $(inventory)"; echo ""
 boot += $(info)
 
 define playbook
-ANSIBLE_CONFIG=$(PWD)/ansible/ansible.cfg \
-    ansible-playbook $(verbose_ansible_$(verbose)) \
-    -e "kube_cluster_name=$(strip $(cn))$(e)" \
+ANSIBLE_CONFIG=$(root)/ansible/ansible.cfg \
+    ansible-playbook $(verbose_ansible_$(strip $(verbose))) \
+    -e "kube_cluster_name=$(strip $(cn)) $(strip $(e))" \
     -i $(inventory) $(playbooks_dir)
 endef
 
@@ -69,10 +68,11 @@ endef
 
 ### Rules ###
 .PHONY: help
-help: ## Shows this help
+help:               ## Shows this help
 	@if [ "$$(which mdv)" ]; then \
     MDV_THEME=729.8953 mdv README.md; \
     fi
+	@$(boot)
 	@$(help)
 	@echo "----------------------------------------------"
 	@$(help-playbooks)

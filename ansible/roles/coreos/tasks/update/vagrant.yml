@@ -5,6 +5,6 @@
     dest: /var/lib/coreos-vagrant/vagrantfile-user-data
 
 - name: Restart the host
-  shell: sleep 5; /sbin/shutdown -r now "cloud-config changed"
+  shell: sleep 20; /sbin/shutdown -r now "cloud-config changed"
   async: 120
   poll: 0

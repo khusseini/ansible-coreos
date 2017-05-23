@@ -1,4 +1,5 @@
-.facts
-.retry
-vagrant
-README.md
+/.facts
+/.retry
+/vagrant
+/README.md
+/bin

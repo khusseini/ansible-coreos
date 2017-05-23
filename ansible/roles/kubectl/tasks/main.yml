@@ -1,11 +1,23 @@
 ---
+
+- name: check kubectl
+  stat:
+    path: '{{ kubectl_path }}'
+  register: kubectlst
+
+- name: ensure directory
+  file:
+    path: '{{ kubectl_path|dirname }}'
+    state: directory
+
 - name: kubectl checksum
   local_action:
      module: shell
-     args: "sha256sum ~/bin/kubectl  | awk '{ print $1 }'"
+     args: "sha256sum {{ kubectl_path }}  | awk '{ print $1 }'"
   run_once: yes
   register: current_kubectl_checksum
   changed_when: false
+  when: kubectlst.stat.exists
 
 - name: download kubectl
   local_action:
@@ -16,5 +28,5 @@
      mode: 0770
   run_once: yes
   when:
-  - current_kubectl_checksum.changed
-  - kubectl_checksum != current_kubectl_checksum.stdout
+  - not kubectlst.stat.exists or current_kubectl_checksum.changed
+  - not current_kubectl_checksum.changed or kubectl_checksum != current_kubectl_checksum.stdout

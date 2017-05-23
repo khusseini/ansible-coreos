@@ -24,7 +24,7 @@
     when: "'vagrant' in group_names"
 
 #- role: coreos
-#  state: ignition-config_written
+#  state: ignition-config
 #  delegate_to: local_host
 #  when: "'vagrant' not in group_names"
 #
