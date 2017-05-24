@@ -7,8 +7,8 @@
   - role: k8s-dns-addon
     delegate_to: localhost
 
-  - role: calico
-    delegate_to: localhost
+#  - role: calico
+#    delegate_to: localhost
 
   - role: k8s-resource
     k8s_resource_kind: Deployment

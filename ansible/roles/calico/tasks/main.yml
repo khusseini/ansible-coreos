@@ -11,25 +11,22 @@
   - name: create callico dir
     file:
       path: '{{ inventory_dir }}/{{ kube_cluster_name }}-calico/'
-      #path: /etc/kubernetes/manifests/
       state: directory
 
   - name: template calico env
     template:
-        src: env.tmpl
-        dest: '{{ inventory_dir }}/{{ kube_cluster_name }}-calico/calico.env'
+      src: env.tmpl
+      dest: '{{ inventory_dir }}/{{ kube_cluster_name }}-calico/calico.env'
 
   - name: create callico dir
     file:
       path: '{{ inventory_dir }}/{{ kube_cluster_name }}-calico/manifests'
-      #path: /etc/kubernetes/manifests/
       state: directory
 
   - name: template calico resorce
     template:
         src: calico.yml.tmpl
         dest: '{{ inventory_dir }}/{{ kube_cluster_name }}-calico/calico.yml'
-        #dest: /etc/kubernetes/manifests/calico.ymĺ
 
   - include: ../k8s-resource/tasks/main.yml
     vars:
