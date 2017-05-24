@@ -7,6 +7,7 @@ Vagrant.require_version ">= 1.6.0"
 
 CLOUD_CONFIG_PATH = File.join(File.dirname(__FILE__), "user-data")
 CONFIG = File.join(File.dirname(__FILE__), "config.rb")
+VAGRANT_ROOT = File.dirname(File.expand_path(__FILE__))
 
 # Defaults for config options defined in CONFIG
 $num_instances = 1
@@ -50,7 +51,7 @@ Vagrant.configure("2") do |config|
   config.ssh.insert_key = false
   # forward ssh agent to easily ssh into the different machines
   config.ssh.forward_agent = true
-  config.ssh.private_key_path = "~/.ssh/id_rsa"
+#  config.ssh.private_key_path = "~/.ssh/id_rsa"
 
 
   config.vm.box = "coreos-%s" % $update_channel
@@ -124,6 +125,27 @@ Vagrant.configure("2") do |config|
         vb.memory = vm_memory
         vb.cpus = vm_cpus
         vb.customize ["modifyvm", :id, "--cpuexecutioncap", "#{$vb_cpuexecutioncap}"]
+
+        file_to_disk = File.join(VAGRANT_ROOT, '.vagrant/machines/'+ vm_name +'/storage.vdi')
+
+        unless File.exist?(file_to_disk)
+          vb.customize ['createhd', '--filename', file_to_disk, '--size', 5 * 1024]
+        end
+
+        vb.customize [
+          'storageattach',
+          :id,
+          '--storagectl',
+          'IDE Controller',
+          '--port',
+          1,
+          '--device',
+          0,
+          '--type',
+          'hdd',
+          '--medium',
+          file_to_disk
+        ]
       end
 
       ip = "172.17.8.#{i+100}"
