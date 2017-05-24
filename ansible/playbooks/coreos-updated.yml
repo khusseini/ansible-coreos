@@ -8,4 +8,5 @@
     state: updated
   tasks:
   - name: Wait for node to come back
-    local_action: wait_for host={{ inventory_hostname }}
+    local_action: wait_for=host: "{{ inventory_hostname }}"
+        delay: 30

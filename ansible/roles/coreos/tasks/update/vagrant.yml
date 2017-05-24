@@ -6,5 +6,5 @@
 
 - name: Restart the host
   shell: sleep 20; /sbin/shutdown -r now "cloud-config changed"
-  async: 120
+  async: 0
   poll: 0

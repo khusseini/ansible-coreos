@@ -5,4 +5,4 @@ Before=docker.service
 [Service]
 EnvironmentFile=/etc/environment
 ExecStartPre=/usr/bin/etcdctl cluster-health
-ExecStartPre=/usr/bin/etcdctl set /coreos.com/network/config '{ "Network": "10.1.0.0/16", "Backend": { "Type": "alloc"} }'
+ExecStartPre=/usr/bin/etcdctl set /coreos.com/network/config '{ "Network": "10.1.0.0/16", "Backend": {"Type": "vxlan", "VNI": 1, "Port": 8472} }'
