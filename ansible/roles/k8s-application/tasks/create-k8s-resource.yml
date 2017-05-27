@@ -1,8 +1,4 @@
 ---
-#- name: Gather resource facts
-#  set_fact:
-#    k8s_resource: "{{ lookup('file', k8s_resource_file) }}"
-
 - name: Gather resource facts
   include_vars:
     file: "{{ k8s_resource_file }}"

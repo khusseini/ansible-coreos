@@ -1,0 +1,54 @@
+---
+- name: Create namespace
+  include_role:
+    name: k8s-application
+    tasks_from: create-k8s-resource
+  vars:
+    k8s_resource_file: "{{ item }}"
+  with_fileglob: "templates/00-namespace.yml"
+
+- name: Create Service Account
+  include_role:
+    name: k8s-application
+    tasks_from: create-k8s-resource
+  vars:
+    k8s_resource_file: "{{ item }}"
+  with_fileglob: "templates/heketi-service-account.yml"
+
+- name: Create ClusterRoleBinding
+  include_role:
+    name: k8s-application
+    tasks_from: create-k8s-resource
+  vars:
+    k8s_resource_file: "{{ item }}"
+  with_fileglob: "templates/clusterrolebinding.yml"
+
+- name: Label nodes
+  command: "kubectl label nodes {{ item }} storagenode=glusterfs --overwrite"
+  with_items: "{{ groups['gluster'] }}"
+
+- name: Create Daemonset
+  include_role:
+    name: k8s-application
+    tasks_from: create-k8s-resource
+  vars:
+    k8s_resource_file: "{{ item }}"
+  with_fileglob: "templates/glusterfs-daemonset.yml"
+
+- include: wait_for_pods.yml
+  vars:
+    selector: glusterfs-node=pod
+    count: "{{ groups['gluster']|length }}"
+
+- name: Create Deployment
+  include_role:
+    name: k8s-application
+    tasks_from: create-k8s-resource
+  vars:
+    k8s_resource_file: "{{ item }}"
+  with_fileglob: "templates/deploy-heketi-deployment.yml"
+
+- include: wait_for_pods.yml
+  vars:
+    selector: glusterfs=heketi-pod
+    count: 1

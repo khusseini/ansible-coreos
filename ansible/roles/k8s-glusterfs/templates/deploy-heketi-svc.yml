@@ -1,0 +1,17 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: deploy-heketi
+  namespace: gluster
+  labels:
+    glusterfs: heketi-service
+    deploy-heketi: support
+  annotations:
+    description: Exposes Heketi Service
+spec:
+  selector:
+    name: deploy-heketi
+  ports:
+  - name: deploy-heketi
+    port: 8080
+    targetPort: 8080

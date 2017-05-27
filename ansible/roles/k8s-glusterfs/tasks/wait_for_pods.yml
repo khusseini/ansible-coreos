@@ -1,0 +1,16 @@
+---
+- name: Wait for pods to start
+  run_once: true
+  shell: |
+      #!/bin/bash
+      n=0
+      until [ $n -ge 900 ]
+      do
+         [ $(kubectl --namespace=gluster get pod --no-headers --show-all --selector="{{ selector }}" | grep Running | wc -l) -eq {{ count }} ] && break
+         n=$[$n+1]
+         echo "."
+         sleep 1
+      done
+      [ $(kubectl --namespace=gluster get pod --no-headers --show-all --selector="{{ selector }}"  | grep Running | wc -l) -eq {{ count }} ]
+  args:
+    executable: /bin/bash
