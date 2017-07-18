@@ -1,4 +1,4 @@
----
+ ---
 - name: Machine is rebooted safely (requires hosts variable to be set)
   hosts: "{{ hosts }}"
   become: true

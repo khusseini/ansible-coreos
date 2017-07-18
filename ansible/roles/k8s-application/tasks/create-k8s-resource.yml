@@ -4,11 +4,12 @@
     file: "{{ k8s_resource_file }}"
     name: k8s_resource
 
+
 - name: Gather resource facts
   set_fact:
-    k8s_resource_namespace: "{{ hostvars['localhost'].k8s_resource.metadata.namespace|default(hostvars['localhost'].k8s_resource.metadata.name) }}"
-    k8s_resource_name: "{{ hostvars['localhost'].k8s_resource.metadata.name }}"
-    k8s_resource_kind: "{{ hostvars['localhost'].k8s_resource.kind }}"
+    k8s_resource_namespace: "{{ k8s_resource.metadata.namespace|default(k8s_resource.metadata.name) }}"
+    k8s_resource_name: "{{ k8s_resource.metadata.name }}"
+    k8s_resource_kind: "{{ k8s_resource.kind }}"
 
 - include_role:
     name: k8s-resource
