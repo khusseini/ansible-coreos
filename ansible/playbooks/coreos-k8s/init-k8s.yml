@@ -4,27 +4,28 @@
   connection: local
   gather_facts: false
   roles:
-#  - role: k8s-dns-addon
-#    delegate_to: localhost
+  - role: k8s-dns-addon
+    delegate_to: localhost
 
+# Not working, yet
 #  - role: calico
 #    delegate_to: localhost
 
   - role: k8s-glusterfs
     delegate_to: localhost
 
-#  - role: k8s-resource
-#    k8s_resource_kind: Deployment
-#    k8s_resource_name: kubernetes-dashboard
-#    k8s_resource_namespace: kube-system
-#    k8s_resource_file: https://rawgit.com/kubernetes/dashboard/master/src/deploy/kubernetes-dashboard.yaml
-#    delegate_to: localhost
+  - role: k8s-resource
+    k8s_resource_kind: Deployment
+    k8s_resource_name: kubernetes-dashboard
+    k8s_resource_namespace: kube-system
+    k8s_resource_file: https://rawgit.com/kubernetes/dashboard/master/src/deploy/kubernetes-dashboard.yaml
+    delegate_to: localhost
 
-#  - role: k8s-application
-#    app_name: nginx-ingress
-#    delegate_to: localhost
+  - role: k8s-application
+    app_name: nginx-ingress
+    delegate_to: localhost
 
-#  - role: k8s-application
-#    app_name: kube-lego
-#    delegate_to: localhost
-#    when: baremetal_provider != 'vagrant'
+  - role: k8s-application
+    app_name: kube-lego
+    delegate_to: localhost
+    when: baremetal_provider != 'vagrant'

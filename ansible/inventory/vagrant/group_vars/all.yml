@@ -2,8 +2,8 @@ k8s_kube_master_ip: 172.17.8.101
 k8s_service_ip: 10.100.0.1
 k8s_service_ip_range: 10.100.0.0/16
 k8s_dns_service_ip: 10.100.0.10
-k8s_dns_domain: cluster.local
-kubernetes_version: 1.6.4
+k8s_dns_domain: vagrant-cluster.local
+kubernetes_version: 1.6.7
 kubectl_checksum: 4d36675f8239d31c0831cfcb956eb07604cf70a7739233597bce0e87e46c42b0.
 k8s_application_target: "{{ inventory_dir }}/{{ kube_cluster_name }}-{{ app_name }}"
 

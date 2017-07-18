@@ -1,0 +1,8 @@
+---
+- name: Initialize Kubernetes GlusterFS with Heketi
+  hosts: kubernetes-master
+  connection: local
+  gather_facts: false
+  roles:
+  - role: k8s-glusterfs
+    delegate_to: localhost
