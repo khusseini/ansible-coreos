@@ -13,6 +13,6 @@ cconfig:
   ssh_authorized_keys: []
   coreos:
     update:
-      reboot-strategy: "off"
+      reboot-strategy: "etcd-lock"
     units: []
   write_files: []
