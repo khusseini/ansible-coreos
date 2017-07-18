@@ -11,9 +11,6 @@
 #  - role: calico
 #    delegate_to: localhost
 
-  - role: k8s-glusterfs
-    delegate_to: localhost
-
   - role: k8s-resource
     k8s_resource_kind: Deployment
     k8s_resource_name: kubernetes-dashboard
