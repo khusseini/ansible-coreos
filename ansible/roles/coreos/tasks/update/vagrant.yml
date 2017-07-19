@@ -3,8 +3,19 @@
   copy:
     src: "{{ coreos_config_compiled }}"
     dest: /var/lib/coreos-vagrant/vagrantfile-user-data
+    force: true
+- name: Safe restart
+  shell: sleep 2 && locksmithctl reboot
+  async: true
+  poll: false
+  ignore_errors: true
+- name: Wait for server startup
+  local_action:
+    module: wait_for
+      host={{inventory_hostname}}
+      port=22
+      timeout=900 delay=60
+  become: false
+- name: Try to unlock
+  shell: while locksmithctl unlock; do sleep 10; done
 
-- name: Restart the host
-  shell: sleep 20; /sbin/shutdown -r now "cloud-config changed"
-  async: 120
-  poll: 0

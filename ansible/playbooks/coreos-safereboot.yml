@@ -1,6 +1,6 @@
 ---
-- name: Machine is rebooted safely (requires hosts variable to be set)
-  hosts: "{{ hosts }}"
+- name: Machine is rebooted safely
+  hosts: "{{ hosts|default('coreos') }}"
   become: true
   serial: true
   tasks:
