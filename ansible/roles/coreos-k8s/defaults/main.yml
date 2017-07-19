@@ -4,6 +4,6 @@ k8s_service_ip_range: 10.100.0.0/16
 k8s_dns_service_ip: 10.100.0.10
 k8s_dns_domain: cluster.local
 
-kubernetes_version: 1.6.1
+kubernetes_version: 1.7.1
 hyperkube_aci: quay.io/coreos/hyperkube
 hyperkube_aci_tag: v{{ kubernetes_version }}_coreos.0

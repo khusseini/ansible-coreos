@@ -69,11 +69,11 @@
       n=0
       until [ $n -ge 900 ]
       do
-         [ $(kubectl --namespace=kube-system get pods  | grep kube-dns | grep Running | wc -l) -eq 3 ] && break  # substitute your command here
+         [ $(kubectl --namespace=kube-system get pods  | grep kube-dns | grep Running | wc -l) -eq 1 ] && break  # substitute your command here
          n=$[$n+1]
          echo "."
          sleep 1
       done
-      [ $(kubectl --namespace=kube-system get pods  | grep kube-dns | grep Running | wc -l) -eq 3 ]
+      [ $(kubectl --namespace=kube-system get pods  | grep kube-dns | grep Running | wc -l) -eq 1 ]
   args:
     executable: /bin/bash

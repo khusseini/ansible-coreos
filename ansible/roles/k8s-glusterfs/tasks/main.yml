@@ -53,7 +53,7 @@
     name: k8s-application
     tasks_from: create-k8s-resource
   vars:
-    k8s_resource_File: "{{ item }}"
+    k8s_resource_file: "{{ item }}"
   with_fileglob: "templates/deploy-heketi-svc.yml"
 
 - include: wait_for_pods.yml
