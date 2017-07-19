@@ -9,32 +9,31 @@ k8s_application_target: "{{ inventory_dir }}/{{ kube_cluster_name }}-{{ app_name
 
 k8s_glusterfs_topology:
   clusters:
-  -
-    - nodes:
-      - node:
-          hostnames:
-            manage:
-            - 172.17.8.101
-            storage:
-            - 172.17.8.101
-          zone: 1
-        devices:
-        - "/dev/sdb"
-      - node:
-          hostnames:
-            manage:
-            - 172.17.8.102
-            storage:
-            - 172.17.8.102
-          zone: 1
-        devices:
-        - "/dev/sdb"
-      - node:
-          hostnames:
-            manage:
-            - 172.17.8.103
-            storage:
-            - 172.17.8.103
-          zone: 1
-        devices:
-        - "/dev/sdb"
+  - nodes:
+    - node:
+        hostnames:
+          manage:
+          - 172.17.8.101
+          storage:
+          - 172.17.8.101
+        zone: 1
+      devices:
+      - "/dev/sdb"
+    - node:
+        hostnames:
+          manage:
+          - 172.17.8.102
+          storage:
+          - 172.17.8.102
+        zone: 1
+      devices:
+      - "/dev/sdb"
+    - node:
+        hostnames:
+          manage:
+          - 172.17.8.103
+          storage:
+          - 172.17.8.103
+        zone: 1
+      devices:
+      - "/dev/sdb"

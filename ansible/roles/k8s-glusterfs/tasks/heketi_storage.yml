@@ -1,0 +1,11 @@
+---
+- name: Copy from remote
+  fetch:
+    src: ~/heketi-storage.json
+    dest: "{{ inventory_dir }}/{{ kube_cluster_name }}-heketi/"
+    flat: true
+    fail_on_missing: true
+
+- shell: kubectl -ngluster create -f "{{ inventory_dir }}/{{ kube_cluster_name }}-heketi/heketi-storage.json"
+  ignore_errors: true
+  delegate_to: localhost

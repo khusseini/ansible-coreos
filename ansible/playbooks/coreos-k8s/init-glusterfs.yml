@@ -1,8 +1,40 @@
 ---
+- name: Modeprobe
+  hosts: gluster
+  become: true
+  tasks:
+  - shell: modprobe dm_thin_pool
+
 - name: Initialize Kubernetes GlusterFS with Heketi
   hosts: kubernetes-master
-  connection: local
-  gather_facts: false
   roles:
   - role: k8s-glusterfs
+    stage: gather_facts
+  - role: k8s-glusterfs
+    stage: init
     delegate_to: localhost
+
+- name: Deploy Heket
+  hosts: localhost
+  connection: local
+  environment:
+    HEKETI_CLI_SERVER: "http://{{ hostvars[groups['kubernetes-master'][0]].heketi_deploy.ep.ip }}:{{ hostvars[groups['kubernetes-master'][0]].heketi_deploy.ep.port }}"
+  roles:
+  - role: k8s-glusterfs
+    stage: heketictl
+    delegate_to: "{{ hostvars[groups['kubernetes-master'][0]].heketi_deploy.node }}"
+  - role: k8s-glusterfs
+    stage: deploy_heketi
+    delegate_to: "{{ hostvars[groups['kubernetes-master'][0]].heketi_deploy.node }}"
+  - role: k8s-glusterfs
+    stage: heketi_storage
+    delegate_to: "{{ hostvars[groups['kubernetes-master'][0]].heketi_deploy.node }}"
+  - role: k8s-glusterfs
+    stage: wait_for_pods
+    selector: job-name=heketi-storage-copy-job
+    count: 1
+    state: Completed
+  - role: k8s-glusterfs
+    stage: clean
+  - role: k8s-glusterfs
+    stage: heketi_finalize

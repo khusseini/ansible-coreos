@@ -6,11 +6,11 @@
       n=0
       until [ $n -ge 900 ]
       do
-         [ $(kubectl --namespace=gluster get pod --no-headers --show-all --selector="{{ selector }}" | grep Running | wc -l) -eq {{ count }} ] && break
+         [ $(kubectl --namespace=gluster get pod --no-headers --show-all --selector="{{ selector }}" | grep {{ state }} | wc -l) -eq {{ count }} ] && break
          n=$[$n+1]
          echo "."
          sleep 1
       done
-      [ $(kubectl --namespace=gluster get pod --no-headers --show-all --selector="{{ selector }}"  | grep Running | wc -l) -eq {{ count }} ]
+      [ $(kubectl --namespace=gluster get pod --no-headers --show-all --selector="{{ selector }}"  | grep {{ state }} | wc -l) -eq {{ count }} ]
   args:
     executable: /bin/bash

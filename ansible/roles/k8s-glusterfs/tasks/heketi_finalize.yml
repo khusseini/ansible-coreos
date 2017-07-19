@@ -1,0 +1,28 @@
+---
+- name: Create Deployment
+  include_role:
+    name: k8s-application
+    tasks_from: create-k8s-resource
+  vars:
+    k8s_resource_file: "{{ item }}"
+  with_fileglob: "templates/heketi-deployment.yml"
+- include: wait_for_pods.yml
+  vars:
+    count: 1
+    selector: "glusterfs=heketi-pod"
+    state: Running
+- name: Create Service
+  include_role:
+    name: k8s-application
+    tasks_from: create-k8s-resource
+  vars:
+    k8s_resource_file: "{{ item }}"
+  with_fileglob: "templates/heketi-svc.yml"
+
+- name: Create Storage Class
+  include_role:
+    name: k8s-application
+    tasks_from: create-k8s-resource
+  vars:
+    k8s_resource_file: "{{ item }}"
+  with_fileglob: "templates/storage.yml"

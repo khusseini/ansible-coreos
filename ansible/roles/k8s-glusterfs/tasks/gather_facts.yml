@@ -1,0 +1,9 @@
+---
+- name: Check heketi deployment service host
+  shell: |
+    kubectl -ngluster get ep -ojson | jq -r '.items[0].subsets[0]|{node: .addresses[0].nodeName, ep: {ip: .addresses[0].ip, port: .ports[0].port} }'
+  delegate_to: localhost
+  register: heketi_check
+
+- set_fact:
+    heketi_deploy: "{{ heketi_check.stdout }}"
