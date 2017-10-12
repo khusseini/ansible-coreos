@@ -61,4 +61,4 @@
   vars:
     selector: glusterfs=heketi-pod
     state: Running
-    count: 2
+    count: 1

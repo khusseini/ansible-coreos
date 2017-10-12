@@ -13,7 +13,7 @@
             Description=Setup Hetzner Subnet Routes
             Requires=network-online.target
             After=network-online.target
-            Before=etcd{{ etcd_version }}.service
+            Before=etcd3.service
             [Service]
             TimeoutStartSec=10m
             ExecStartPre=/usr/bin/rkt fetch --insecure-options=image docker://quay.io/cornelius/hetner-netconf

@@ -14,15 +14,18 @@
     stage: init
     delegate_to: localhost
 
+- name: Heketi Ctl
+  hosts: gluster
+  roles:
+  - role: k8s-glusterfs
+    stage: heketictl
+
 - name: Deploy Heket
   hosts: localhost
   connection: local
   environment:
     HEKETI_CLI_SERVER: "http://{{ hostvars[groups['kubernetes-master'][0]].heketi_deploy.ep.ip }}:{{ hostvars[groups['kubernetes-master'][0]].heketi_deploy.ep.port }}"
   roles:
-  - role: k8s-glusterfs
-    stage: heketictl
-    delegate_to: "{{ hostvars[groups['kubernetes-master'][0]].heketi_deploy.node }}"
   - role: k8s-glusterfs
     stage: deploy_heketi
     delegate_to: "{{ hostvars[groups['kubernetes-master'][0]].heketi_deploy.node }}"

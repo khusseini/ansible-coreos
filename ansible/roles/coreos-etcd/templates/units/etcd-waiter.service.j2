@@ -1,8 +1,8 @@
 [Unit]
 Description=etcd waiter
 Wants=network-online.target
-Wants=etcd{{ etcd_version }}.service
-After=etcd{{ etcd_version }}.service
+Wants=etcd3.service
+After=etcd3.service
 After=network-online.target
 Before=setup-network-environment.service
 

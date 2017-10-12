@@ -12,8 +12,8 @@
   - role: coreos-flannel
     state: facts_gathered
 
-  - role: coreos-tinc
-    state: facts_gathered
+#  - role: coreos-tinc
+#    state: facts_gathered
 
   - role: coreos-k8s
     state: facts_gathered

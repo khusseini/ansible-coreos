@@ -1,6 +1,6 @@
 [Unit]
-Requires=etcd{{ etcd_version }}.service etcd-waiter.service
-After=etcd{{ etcd_version }}.service etcd-waiter.service
+Requires=etcd3.service etcd-waiter.service
+After=etcd3.service etcd-waiter.service
 Before=docker.service
 [Service]
 EnvironmentFile=/etc/environment

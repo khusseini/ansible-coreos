@@ -1,8 +1,8 @@
 [Unit]
 Description=Kubernetes API Server
 Documentation=https://github.com/GoogleCloudPlatform/kubernetes
-Requires=setup-network-environment.service etcd{{ etcd_version }}.service
-After=setup-network-environment.service etcd{{ etcd_version }}.service kubernetes-networking.target
+Requires=setup-network-environment.service etcd3.service
+After=setup-network-environment.service etcd3.service kubernetes-networking.target
 Before=kube-kubelet.service
 
 [Service]

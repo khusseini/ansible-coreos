@@ -1,10 +1,26 @@
 ---
+- name: Write topology
+  copy:
+    content: "{{ k8s_glusterfs_topology }}"
+    dest: ~/gluster_topology.json
+
+- name: Load topology
+  shell: ~/bin/heketi-client/bin/heketi-cli topology load --json=/home/core/gluster_topology.json
+
+- name: Setup Storage
+  shell: ~/bin/heketi-client/bin/heketi-cli setup-openshift-heketi-storage
+  register: last_result
+  changed_when: last_result.rc == 0
+  failed_when: last_result.rc > 0 and last_result.rc != 255
+
+- debug:
+    msg: "{{ last_result }}"
+
 - name: Copy from remote
   fetch:
     src: ~/heketi-storage.json
     dest: "{{ inventory_dir }}/{{ kube_cluster_name }}-heketi/"
     flat: true
-    fail_on_missing: true
 
 - shell: kubectl -ngluster create -f "{{ inventory_dir }}/{{ kube_cluster_name }}-heketi/heketi-storage.json"
   ignore_errors: true

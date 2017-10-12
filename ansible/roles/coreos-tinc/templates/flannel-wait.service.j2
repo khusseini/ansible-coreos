@@ -1,7 +1,7 @@
 [Unit]
 Description=Wait For Flannel
 Requires=flanneld.service
-After=etcd.service etcd{{ etcd_version }}.service flanneld.service
+After=etcd.service etcd3.service flanneld.service
 
 [Service]
 Type=oneshot

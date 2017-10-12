@@ -11,6 +11,8 @@
           command: start
           enable: true
           drop-ins:
+          - name: 00-environment.conf
+            content: "{{ lookup('template', 'templates/00-environment.conf.j2') }}"
           - name: 50-network-config.conf
             content: "{{ lookup('template', 'templates/50-network-config.conf.j2') }}"
           - name: 40-symlink.conf

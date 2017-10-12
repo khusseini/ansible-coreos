@@ -5,7 +5,7 @@
   vars:
     cenv:
       etcdctl_api: '{{ etcd_version }}'
-      etcdctl_endpoint: https://{{ inventory_hostname }}:4001
+      etcdctl_endpoint: https://{{ inventory_hostname }}:2379
       etcdctl_peers: "{{ lookup('template', 'templates/env/etcdctl_peers.j2') }}"
       locksmithctl_endpoint: https://{{ inventory_hostname }}:2379
       locksmithctl_etcd_cafile: /etc/ssl/etcd/ca.crt
@@ -20,10 +20,10 @@
           etcd_keyfile: /etc/ssl/etcd/key.key
           etcd_servers: https://{{ inventory_hostname }}:2379
         units:
-        - name: "etcd{{ etcd_version }}.service"
+        - name: "etcd3.service"
           command: start
           enable: true
-          content: "{{ lookup('template', 'templates/units/etcd'+etcd_version+'.service.j2') }}"
+          content: "{{ lookup('template', 'templates/units/etcd3.service.j2') }}"
 
         - name: etcd-waiter.service
           command: start

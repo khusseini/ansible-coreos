@@ -27,7 +27,7 @@ Environment=ETCD_PEER_CA_FILE=/etc/ssl/etcd/ca.crt
 Environment=ETCD_PEER_CERT_FILE=/etc/ssl/etcd/key.crt
 Environment=ETCD_PEER_KEY_FILE=/etc/ssl/etcd/key.key
 # etcd version
-Environment=ETCD_IMAGE_TAG=v3.1.6
+Environment=ETCD_IMAGE_TAG=v{{ etcd_version }}
 # etcd user
 Environment=ETCD_USER=root
 Environment=ETCD_DATA_DIR=/var/lib/etcd3
@@ -35,8 +35,8 @@ Environment="RKT_RUN_ARGS=--volume etc-ssl-etcd,kind=host,source=/etc/ssl/etcd,r
 
 ExecStart=/usr/lib64/coreos/etcd-wrapper --name {{ coreos_hostname }} \
     --data-dir /var/lib/etcd \
-    --listen-client-urls https://{{ inventory_hostname }}:2379,https://{{ inventory_hostname }}:4001\
-    --advertise-client-urls  https://{{ inventory_hostname }}:2379 \
+    --listen-client-urls https://{{ inventory_hostname }}:2379\
+    --advertise-client-urls https://{{ inventory_hostname }}:2379 \
     --listen-peer-urls https://{{ inventory_hostname }}:2380 \
     --initial-advertise-peer-urls https://{{ inventory_hostname }}:2380 \
     --initial-cluster {% for host in groups['etcd-node'] %}{{ hostvars[host]['coreos_hostname'] }}=https://{{host}}:2380{%if not loop.last %},{% endif %}{% endfor %} \

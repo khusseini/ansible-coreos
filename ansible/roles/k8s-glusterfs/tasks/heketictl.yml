@@ -1,25 +1,6 @@
 ---
-#- unarchive:
-#    src: https://github.com/heketi/heketi/releases/download/v4.0.0/heketi-client-v4.0.0.linux.amd64.tar.gz
-#    dest: ~/bin
-#    remote_src: true
+- unarchive:
+    src: https://github.com/heketi/heketi/releases/download/v4.0.0/heketi-client-v4.0.0.linux.amd64.tar.gz
+    dest: ~/bin
+    remote_src: true
 
-- shell: ~/bin/heketi-client/bin/heketi-cli cluster
-  register: bla
-
-- name: Write topology
-  copy:
-    content: "{{ k8s_glusterfs_topology }}"
-    dest: ~/gluster_topology.json
-
-- name: Load topology
-  shell: ~/bin/heketi-client/bin/heketi-cli topology load --json=/home/core/gluster_topology.json
-
-- name: Setup Storage
-  shell: ~/bin/heketi-client/bin/heketi-cli setup-openshift-heketi-storage
-  register: last_result
-  changed_when: last_result.rc == 0
-  failed_when: last_result.rc > 0 and last_result.rc != 255
-
-- debug:
-    msg: "{{ last_result }}"

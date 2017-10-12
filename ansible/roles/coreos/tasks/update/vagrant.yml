@@ -14,7 +14,7 @@
     module: wait_for
       host={{inventory_hostname}}
       port=22
-      timeout=900 delay=60
+      timeout=900 delay=30
   become: false
 - name: Try to unlock
   shell: while locksmithctl unlock; do sleep 10; done

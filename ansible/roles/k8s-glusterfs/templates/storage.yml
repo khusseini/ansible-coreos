@@ -1,7 +1,10 @@
+---
 apiVersion: storage.k8s.io/v1beta1
 kind: StorageClass
 metadata:
   name: gluster-heketi
 provisioner: kubernetes.io/glusterfs
 parameters:
-  resturl: "http://heketi.gluster.svc.{{ k8s_dns_domain }}:8080"
+  resturl: "http://heketi.gluster.svc.vagrant-cluster.local:8080"
+  restuser: "JxRPHaxhxk"
+  restuserkey: "dqEUiVAl3g"

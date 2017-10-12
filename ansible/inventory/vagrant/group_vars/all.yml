@@ -3,7 +3,10 @@ k8s_service_ip: 10.100.0.1
 k8s_service_ip_range: 10.100.0.0/16
 k8s_dns_service_ip: 10.100.0.10
 k8s_dns_domain: vagrant-cluster.local
-kubernetes_version: 1.7.1
+kubernetes_version: 1.6.7
+flanneld_version: v0.8.0
+etcd_version: 3.2
+
 kubectl_checksum: 4d36675f8239d31c0831cfcb956eb07604cf70a7739233597bce0e87e46c42b0.
 k8s_application_target: "{{ inventory_dir }}/{{ kube_cluster_name }}-{{ app_name }}"
 
